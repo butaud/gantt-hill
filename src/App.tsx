@@ -2,11 +2,11 @@ import { useState } from "react";
 import "./App.css";
 import { PlanEditor } from "./PlanEditor";
 
-import { testPlan } from "./testPlan";
 import { TaskStore } from "./model/task";
 import { DevStore } from "./model/dev";
 import { DevStoreProvider } from "./context/DevStoreContext";
 import { TaskStoreProvider } from "./context/TaskStoreContext";
+import { DateTime } from "luxon";
 
 const devStore = new DevStore();
 const taskStore = new TaskStore(devStore);
@@ -21,8 +21,8 @@ d2.addTask(t2);
 [...Array(7).keys()].forEach((i) => d2.oofDays.add(i));
 
 function App() {
-  const [name, setName] = useState(testPlan.name);
-  const [start, setStart] = useState(testPlan.start);
+  const [name, setName] = useState("Test Plan");
+  const [start, setStart] = useState(DateTime.now());
 
   return (
     <DevStoreProvider store={devStore}>

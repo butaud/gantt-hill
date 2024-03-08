@@ -1,7 +1,6 @@
 import { DateTime } from "luxon";
-import { Schedule } from "./models";
+import { Schedule } from "./model/dev";
 import { FC, useState } from "react";
-import { getScheduleEnd, schedule } from "./schedule";
 import { TaskNode } from "./TaskNode";
 import { observer } from "mobx-react-lite";
 import { useTaskStore } from "./context/TaskStoreContext";
@@ -89,11 +88,8 @@ const TaskSection: FC = observer(() => {
 const ScheduleSection: FC<{ start: DateTime }> = observer(({ start }) => {
   const devStore = useDevStore();
   const devs = devStore.getDevs();
-  const planSchedule = schedule(devs);
-  const end = getScheduleEnd(
-    devs.flatMap((dev) => dev.tasks),
-    planSchedule,
-  );
+  const planSchedule = devStore.schedule;
+  const end = devStore.scheduleEnd;
   return (
     <table>
       <thead>

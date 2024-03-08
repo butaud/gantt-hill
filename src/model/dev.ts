@@ -1,6 +1,7 @@
 import { makeAutoObservable } from "mobx";
 import { Task } from "./task";
 
+export type Schedule = Record<number, number>;
 export class DevStore {
   private devs: Dev[] = [];
   constructor() {
@@ -17,6 +18,55 @@ export class DevStore {
   }
   deleteDev(dev: Dev) {
     this.devs = this.devs.filter((d) => d !== dev);
+  }
+
+  get schedule() {
+    const result: Schedule = {};
+    let now = 0;
+    const tasksToSchedule = this.devs.flatMap((dev) => dev.tasks).length;
+    const isWorkingOnATask = (dev: Dev, now: number) =>
+      dev.tasks.some(
+        (task) =>
+          result[task.id] <= now && now < result[task.id] + task.estimate,
+      );
+
+    const isTaskReadyToStart = (task: Task, now: number): boolean =>
+      task.dependsOn.every(
+        (dependency) => result[dependency.id] + dependency.estimate <= now,
+      );
+
+    while (Object.keys(result).length < tasksToSchedule) {
+      for (const dev of this.devs) {
+        if (!isWorkingOnATask(dev, now) && !dev.isOofDay(now)) {
+          const nextTask = dev.tasks.find(
+            (task) => result[task.id] === undefined,
+          );
+          if (nextTask !== undefined && isTaskReadyToStart(nextTask, now)) {
+            result[nextTask.id] = now;
+          }
+        }
+      }
+      now++;
+    }
+    return result;
+  }
+
+  get scheduleEnd() {
+    let maxTask: Task | undefined;
+    for (const dev of this.devs) {
+      for (const task of dev.tasks) {
+        if (
+          maxTask === undefined ||
+          this.schedule[task.id] + task.estimate >
+            this.schedule[maxTask.id] + maxTask.estimate
+        ) {
+          maxTask = task;
+        }
+      }
+    }
+    return maxTask === undefined
+      ? 0
+      : this.schedule[maxTask.id] + maxTask.estimate;
   }
 }
 
