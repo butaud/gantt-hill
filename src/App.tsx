@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "./App.css";
-import { PlanEditor } from "./PlanEditor";
+import { PlanEditor } from "./ui/PlanEditor";
 
 import { TaskStore } from "./model/task";
 import { DevStore } from "./model/dev";

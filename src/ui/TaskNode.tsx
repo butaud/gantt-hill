@@ -1,6 +1,6 @@
 import { FC, useState } from "react";
-import { Task } from "./model/task";
-import { useTaskStore } from "./context/TaskStoreContext";
+import { Task } from "../model/task";
+import { useTaskStore } from "../context/TaskStoreContext";
 import { observer } from "mobx-react-lite";
 
 export type ITaskNodeProps = {
