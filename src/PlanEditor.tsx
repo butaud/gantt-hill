@@ -1,7 +1,8 @@
 import { DateTime } from "luxon";
-import { Plan, Task, Dev, Schedule } from "./models";
+import { Plan, Task, Dev, Schedule, Draft } from "./models";
 import { FC } from "react";
 import { getScheduleEnd, schedule } from "./schedule";
+import { TaskNode } from "./TaskNode";
 
 type IPlanEditorProps = {
   plan: Readonly<Plan>;
@@ -20,9 +21,66 @@ export const PlanEditor: FC<IPlanEditorProps> = ({
 }) => {
   const planSchedule = schedule(plan.devs);
   const end = getScheduleEnd(plan.tasks, planSchedule);
+
+  const unassignedTasks = plan.tasks.filter(
+    (task) => planSchedule[task.id] === undefined,
+  );
+  const assignedTasks = plan.tasks.filter(
+    (task) => planSchedule[task.id] !== undefined,
+  );
+
+  const addTask = (task: Draft<Task>) => {
+    const id = Math.max(...plan.tasks.map((task) => task.id)) + 1;
+    setPlanTasks([...plan.tasks, { ...task, id }]);
+  };
+
+  const updateTask = (task: Task) => {
+    setPlanTasks(plan.tasks.map((t) => (t.id === task.id ? task : t)));
+  };
+
+  const deleteTask = (task: Task) => {
+    setPlanTasks(plan.tasks.filter((t) => t.id !== task.id));
+  };
+
   return (
     <div>
       <h2>{plan.name}</h2>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}
+      >
+        <div>
+          <h3>Unassigned Tasks</h3>
+          <div>
+            {unassignedTasks.map((task) => (
+              <TaskNode
+                key={task.id}
+                task={task}
+                addTask={addTask}
+                updateTask={updateTask}
+                deleteTask={deleteTask}
+              />
+            ))}
+          </div>
+        </div>
+        <div>
+          <h3>Assigned Tasks</h3>
+          <ul>
+            {assignedTasks.map((task) => (
+              <TaskNode
+                key={task.id}
+                task={task}
+                addTask={addTask}
+                updateTask={updateTask}
+                deleteTask={deleteTask}
+              />
+            ))}
+          </ul>
+        </div>
+      </div>
       <table>
         <thead>
           <tr>

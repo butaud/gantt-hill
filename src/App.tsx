@@ -5,6 +5,22 @@ import { PlanEditor } from "./PlanEditor";
 
 import { testPlan } from "./testPlan";
 
+const replaceAllMatchingTasks = (
+  listToUpdate: ReadonlyArray<Task>,
+  sourceList: ReadonlyArray<Task>,
+) => {
+  return listToUpdate
+    .filter((task) =>
+      sourceList.find((sourceTask) => sourceTask.id === task.id),
+    )
+    .map((task) => {
+      const matchingTask = sourceList.find(
+        (sourceTask) => sourceTask.id === task.id,
+      );
+      return matchingTask || task;
+    });
+};
+
 function App() {
   const [name, setName] = useState(testPlan.name);
   const [start, setStart] = useState(testPlan.start);
@@ -19,6 +35,25 @@ function App() {
     devs,
   };
 
+  const setPlanTasks = (tasks: ReadonlyArray<Task>) => {
+    const dependencyUpdatedTasks = tasks.map((task) => {
+      const dependsOn = task.dependsOn
+        .filter((dependency) => tasks.includes(dependency))
+        .map(
+          (dependency) =>
+            tasks.find((t) => t.id === dependency.id) ?? dependency,
+        );
+      return { ...task, dependsOn };
+    });
+    setTasks(dependencyUpdatedTasks);
+    setDevs(
+      devs.map((dev) => ({
+        ...dev,
+        tasks: replaceAllMatchingTasks(dev.tasks, tasks),
+      })),
+    );
+  };
+
   return (
     <div className="App">
       <header className="App-header">
@@ -27,7 +62,7 @@ function App() {
       <PlanEditor
         plan={plan}
         setPlanDevs={setDevs}
-        setPlanTasks={setTasks}
+        setPlanTasks={setPlanTasks}
         setPlanName={setName}
         setPlanStart={setStart}
       />

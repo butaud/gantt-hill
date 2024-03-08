@@ -1,5 +1,7 @@
 import { DateTime } from "luxon";
 
+export type Draft<T> = Omit<T, "id">;
+
 export type ID = number;
 export type Task = {
   id: ID;

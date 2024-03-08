@@ -15,6 +15,13 @@ const task2: Task = {
   dependsOn: [task1],
 };
 
+const task3: Task = {
+  id: 3,
+  name: "Task 3",
+  estimate: 1,
+  dependsOn: [task2],
+};
+
 const dev1: Dev = {
   id: 1,
   name: "Dev 1",
@@ -38,6 +45,6 @@ export const testPlan: Plan = {
   id: 1,
   name: "Test Plan",
   start: DateTime.now(),
-  tasks: [task1, task2],
+  tasks: [task1, task2, task3],
   devs: [dev1, dev2],
 };

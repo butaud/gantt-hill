@@ -70,26 +70,26 @@ const isOof = (dev: Dev, now: number): boolean =>
   );
 
 export const schedule: (devs: ReadonlyArray<Dev>) => Schedule = (devs) => {
-  const schedule: Schedule = {};
+  const result: Schedule = {};
   let now = 0;
   const tasksToSchedule = devs.flatMap((dev) => dev.tasks).length;
-  while (Object.keys(schedule).length < tasksToSchedule) {
+  while (Object.keys(result).length < tasksToSchedule) {
     for (const dev of devs) {
-      if (!isAssigned(schedule, dev, now) && !isOof(dev, now)) {
+      if (!isAssigned(result, dev, now) && !isOof(dev, now)) {
         const nextTask = dev.tasks.find(
-          (task) => schedule[task.id] === undefined,
+          (task) => result[task.id] === undefined,
         );
         if (
           nextTask !== undefined &&
-          isTaskReadyToStart(schedule, nextTask, now)
+          isTaskReadyToStart(result, nextTask, now)
         ) {
-          schedule[nextTask.id] = now;
+          result[nextTask.id] = now;
         }
       }
     }
     now++;
   }
-  return schedule;
+  return result;
 };
 
 export const getScheduleEnd: (
