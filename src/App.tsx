@@ -1,72 +1,45 @@
 import { useState } from "react";
 import "./App.css";
-import { Dev, Task } from "./models";
 import { PlanEditor } from "./PlanEditor";
 
 import { testPlan } from "./testPlan";
+import { TaskStore } from "./model/task";
+import { DevStore } from "./model/dev";
+import { DevStoreProvider } from "./context/DevStoreContext";
+import { TaskStoreProvider } from "./context/TaskStoreContext";
 
-const replaceAllMatchingTasks = (
-  listToUpdate: ReadonlyArray<Task>,
-  sourceList: ReadonlyArray<Task>,
-) => {
-  return listToUpdate
-    .filter((task) =>
-      sourceList.find((sourceTask) => sourceTask.id === task.id),
-    )
-    .map((task) => {
-      const matchingTask = sourceList.find(
-        (sourceTask) => sourceTask.id === task.id,
-      );
-      return matchingTask || task;
-    });
-};
+const devStore = new DevStore();
+const taskStore = new TaskStore(devStore);
+const t1 = taskStore.addTask({ name: "Task 1", estimate: 3 });
+const t2 = taskStore.addTask({ name: "Task 2", estimate: 2 });
+taskStore.addTask({ name: "Task 3", estimate: 1 });
+t2.addDependency(t1);
+const d1 = devStore.addDev({ name: "Dev 1" });
+const d2 = devStore.addDev({ name: "Dev 2" });
+d1.addTask(t1);
+d2.addTask(t2);
+[...Array(7).keys()].forEach((i) => d2.oofDays.add(i));
 
 function App() {
   const [name, setName] = useState(testPlan.name);
   const [start, setStart] = useState(testPlan.start);
-  const [tasks, setTasks] = useState<ReadonlyArray<Task>>(testPlan.tasks);
-  const [devs, setDevs] = useState<ReadonlyArray<Dev>>(testPlan.devs);
-
-  const plan = {
-    id: 1,
-    name,
-    start,
-    tasks,
-    devs,
-  };
-
-  const setPlanTasks = (tasks: ReadonlyArray<Task>) => {
-    const dependencyUpdatedTasks = tasks.map((task) => {
-      const dependsOn = task.dependsOn
-        .filter((dependency) => tasks.includes(dependency))
-        .map(
-          (dependency) =>
-            tasks.find((t) => t.id === dependency.id) ?? dependency,
-        );
-      return { ...task, dependsOn };
-    });
-    setTasks(dependencyUpdatedTasks);
-    setDevs(
-      devs.map((dev) => ({
-        ...dev,
-        tasks: replaceAllMatchingTasks(dev.tasks, tasks),
-      })),
-    );
-  };
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1>Gantt Hill</h1>
-      </header>
-      <PlanEditor
-        plan={plan}
-        setPlanDevs={setDevs}
-        setPlanTasks={setPlanTasks}
-        setPlanName={setName}
-        setPlanStart={setStart}
-      />
-    </div>
+    <DevStoreProvider store={devStore}>
+      <TaskStoreProvider store={taskStore}>
+        <div className="App">
+          <header className="App-header">
+            <h1>Gantt Hill</h1>
+          </header>
+          <PlanEditor
+            name={name}
+            start={start}
+            setPlanName={setName}
+            setPlanStart={setStart}
+          />
+        </div>
+      </TaskStoreProvider>
+    </DevStoreProvider>
   );
 }
 

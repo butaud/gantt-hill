@@ -1,137 +1,144 @@
 import { DateTime } from "luxon";
-import { Plan, Task, Dev, Schedule, Draft } from "./models";
-import { FC } from "react";
+import { Schedule } from "./models";
+import { FC, useState } from "react";
 import { getScheduleEnd, schedule } from "./schedule";
 import { TaskNode } from "./TaskNode";
+import { observer } from "mobx-react-lite";
+import { useTaskStore } from "./context/TaskStoreContext";
+import { useDevStore } from "./context/DevStoreContext";
+import { Dev } from "./model/dev";
 
 type IPlanEditorProps = {
-  plan: Readonly<Plan>;
+  name: string;
+  start: DateTime;
   setPlanName: (name: string) => void;
   setPlanStart: (start: DateTime) => void;
-  setPlanTasks: (tasks: ReadonlyArray<Task>) => void;
-  setPlanDevs: (devs: ReadonlyArray<Dev>) => void;
 };
 
 export const PlanEditor: FC<IPlanEditorProps> = ({
-  plan,
+  name,
+  start,
   setPlanName,
   setPlanStart,
-  setPlanTasks,
-  setPlanDevs,
 }) => {
-  const planSchedule = schedule(plan.devs);
-  const end = getScheduleEnd(plan.tasks, planSchedule);
-
-  const unassignedTasks = plan.tasks.filter(
-    (task) => planSchedule[task.id] === undefined,
-  );
-  const assignedTasks = plan.tasks.filter(
-    (task) => planSchedule[task.id] !== undefined,
-  );
-
-  const addTask = (task: Draft<Task>) => {
-    const id = Math.max(...plan.tasks.map((task) => task.id)) + 1;
-    setPlanTasks([...plan.tasks, { ...task, id }]);
-  };
-
-  const updateTask = (task: Task) => {
-    setPlanTasks(plan.tasks.map((t) => (t.id === task.id ? task : t)));
-  };
-
-  const deleteTask = (task: Task) => {
-    setPlanTasks(plan.tasks.filter((t) => t.id !== task.id));
-  };
-
+  const [editing, setEditing] = useState(false);
   return (
     <div>
-      <h2>{plan.name}</h2>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between",
-        }}
-      >
-        <div>
-          <h3>Unassigned Tasks</h3>
-          <div>
-            {unassignedTasks.map((task) => (
-              <TaskNode
-                key={task.id}
-                task={task}
-                addTask={addTask}
-                updateTask={updateTask}
-                deleteTask={deleteTask}
-              />
-            ))}
-          </div>
-        </div>
-        <div>
-          <h3>Assigned Tasks</h3>
-          <ul>
-            {assignedTasks.map((task) => (
-              <TaskNode
-                key={task.id}
-                task={task}
-                addTask={addTask}
-                updateTask={updateTask}
-                deleteTask={deleteTask}
-              />
-            ))}
-          </ul>
-        </div>
-      </div>
-      <table>
-        <thead>
-          <tr>
-            <tr></tr>
-            {[...Array(end).keys()].map((day) => (
-              <DayHeader key={day} day={plan.start.plus({ days: day })} />
-            ))}
-          </tr>
-          {plan.devs.map((dev) => (
-            <DevRow key={dev.id} dev={dev} schedule={planSchedule} end={end} />
-          ))}
-        </thead>
-      </table>
+      {editing ? (
+        <>
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setPlanName(e.target.value)}
+          />
+          <input
+            type="date"
+            value={start.toISODate() ?? undefined}
+            onChange={(e) => setPlanStart(DateTime.fromISO(e.target.value))}
+          />
+          <button onClick={() => setEditing(false)}>Stop Editing</button>
+        </>
+      ) : (
+        <>
+          <h2>{name}</h2>
+          <p>Starts: {start.toLocaleString()}</p>
+          <button onClick={() => setEditing(true)}>Edit</button>
+        </>
+      )}
+      <TaskSection />
+      <ScheduleSection start={start} />
     </div>
   );
 };
+
+const TaskSection: FC = observer(() => {
+  const taskStore = useTaskStore();
+  const tasks = taskStore.getTasks();
+
+  const assignedTasks = tasks.filter((task) => task.isAssigned);
+  const unassignedTasks = tasks.filter((task) => !task.isAssigned);
+
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+      }}
+    >
+      <div>
+        <h3>Unassigned Tasks</h3>
+        <div>
+          {unassignedTasks.map((task) => (
+            <TaskNode key={task.id} task={task} />
+          ))}
+        </div>
+      </div>
+      <div>
+        <h3>Assigned Tasks</h3>
+        <ul>
+          {assignedTasks.map((task) => (
+            <TaskNode key={task.id} task={task} />
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+});
+
+const ScheduleSection: FC<{ start: DateTime }> = observer(({ start }) => {
+  const devStore = useDevStore();
+  const devs = devStore.getDevs();
+  const planSchedule = schedule(devs);
+  const end = getScheduleEnd(
+    devs.flatMap((dev) => dev.tasks),
+    planSchedule,
+  );
+  return (
+    <table>
+      <thead>
+        <tr>
+          <th></th>
+          {[...Array(end).keys()].map((day) => (
+            <DayHeader key={day} day={start.plus({ days: day })} />
+          ))}
+        </tr>
+        {devs.map((dev) => (
+          <DevRow key={dev.id} dev={dev} schedule={planSchedule} end={end} />
+        ))}
+      </thead>
+    </table>
+  );
+});
 
 const DayHeader: FC<{ day: DateTime }> = ({ day }) => {
   return <th>{day.toFormat("EEE d")}</th>;
 };
 
-const DevRow: FC<{ dev: Dev; schedule: Schedule; end: number }> = ({
-  dev,
-  schedule,
-  end,
-}) => {
-  return (
-    <tr>
-      <td>{dev.name}</td>
-      {[...Array(end).keys()].map((day) => (
-        <DevCell key={day} day={day} dev={dev} schedule={schedule} />
-      ))}
-    </tr>
-  );
-};
+const DevRow: FC<{ dev: Dev; schedule: Schedule; end: number }> = observer(
+  ({ dev, schedule, end }) => {
+    return (
+      <tr>
+        <td>{dev.name}</td>
+        {[...Array(end).keys()].map((day) => (
+          <DevCell key={day} day={day} dev={dev} schedule={schedule} />
+        ))}
+      </tr>
+    );
+  },
+);
 
-const DevCell: FC<{ dev: Dev; day: number; schedule: Schedule }> = ({
-  dev,
-  day,
-  schedule,
-}) => {
-  const isOof = dev.oofages.some(
-    (oof) => day >= oof.startInclusive && day < oof.endExclusive,
-  );
-  const task = dev.tasks.find(
-    (task) =>
-      schedule[task.id] <= day && schedule[task.id] + task.estimate > day,
-  );
-  return (
-    <td style={{ backgroundColor: isOof ? "lightgray" : "white" }}>
-      {task ? task.name : null}
-    </td>
-  );
-};
+const DevCell: FC<{ dev: Dev; day: number; schedule: Schedule }> = observer(
+  ({ dev, day, schedule }) => {
+    const isOof = dev.isOofDay(day);
+    const task = dev.tasks.find(
+      (task) =>
+        schedule[task.id] <= day && schedule[task.id] + task.estimate > day,
+    );
+    return (
+      <td style={{ backgroundColor: isOof ? "lightgray" : "white" }}>
+        {task ? task.name : null}
+      </td>
+    );
+  },
+);

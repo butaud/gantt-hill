@@ -1,4 +1,6 @@
-import { Dev, Schedule, Task } from "./models";
+import { Dev } from "./model/dev";
+import { Task } from "./model/task";
+import { Schedule } from "./models";
 
 export const areCycleFree: (tasks: ReadonlyArray<Task>) => boolean = (
   tasks,
@@ -64,18 +66,13 @@ const isAssigned = (schedule: Schedule, dev: Dev, now: number): boolean =>
       schedule[task.id] <= now && now < schedule[task.id] + task.estimate,
   );
 
-const isOof = (dev: Dev, now: number): boolean =>
-  dev.oofages.some(
-    (oofage) => oofage.startInclusive <= now && now < oofage.endExclusive,
-  );
-
 export const schedule: (devs: ReadonlyArray<Dev>) => Schedule = (devs) => {
   const result: Schedule = {};
   let now = 0;
   const tasksToSchedule = devs.flatMap((dev) => dev.tasks).length;
   while (Object.keys(result).length < tasksToSchedule) {
     for (const dev of devs) {
-      if (!isAssigned(result, dev, now) && !isOof(dev, now)) {
+      if (!isAssigned(result, dev, now) && !dev.isOofDay(now)) {
         const nextTask = dev.tasks.find(
           (task) => result[task.id] === undefined,
         );

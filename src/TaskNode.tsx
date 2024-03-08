@@ -1,34 +1,19 @@
 import { FC, useState } from "react";
-import { Draft, Task } from "./models";
+import { Task } from "./model/task";
+import { useTaskStore } from "./context/TaskStoreContext";
+import { observer } from "mobx-react-lite";
 
 export type ITaskNodeProps = {
   task: Task | undefined;
-  addTask: (task: Draft<Task>) => void;
-  updateTask: (task: Task) => void;
-  deleteTask: (task: Task) => void;
 };
 
-export const TaskNode: FC<ITaskNodeProps> = ({
-  task,
-  addTask,
-  updateTask,
-  deleteTask,
-}) => {
+export const TaskNode: FC<ITaskNodeProps> = observer(({ task }) => {
   const [editing, setEditing] = useState(task === undefined);
-
-  const saveTask = (draft: Draft<Task>) => {
-    if (task === undefined) {
-      addTask(draft);
-    } else {
-      updateTask({ ...task, ...draft });
-    }
-    setEditing(false);
-  };
 
   return (
     <div>
       {editing || !task ? (
-        <TaskEditNode task={task} saveTask={saveTask} />
+        <TaskEditNode task={task} stopEditing={() => setEditing(false)} />
       ) : (
         <TaskDisplayNode task={task} />
       )}
@@ -36,19 +21,30 @@ export const TaskNode: FC<ITaskNodeProps> = ({
         <button onClick={() => setEditing(true)}>Edit</button>
       )}
       {task !== undefined && (
-        <button onClick={() => deleteTask(task)}>Delete</button>
+        <button onClick={() => task.delete()}>Delete</button>
       )}
     </div>
   );
-};
+});
 
 const TaskEditNode: FC<{
   task: Task | undefined;
-  saveTask: (task: Draft<Task>) => void;
-}> = ({ task, saveTask }) => {
+  stopEditing: () => void;
+}> = observer(({ task, stopEditing }) => {
   const [name, setName] = useState(task?.name ?? "New Task");
   const [estimate, setEstimate] = useState(task?.estimate ?? 0);
-  const [dependsOn, setDependsOn] = useState(task?.dependsOn ?? []);
+  const taskStore = useTaskStore();
+
+  const saveTask = () => {
+    if (task) {
+      task.setName(name);
+      task.setEstimate(estimate);
+      stopEditing();
+    } else {
+      taskStore.addTask({ name, estimate });
+      stopEditing();
+    }
+  };
 
   return (
     <>
@@ -62,12 +58,10 @@ const TaskEditNode: FC<{
         value={estimate}
         onChange={(e) => setEstimate(parseInt(e.target.value))}
       />
-      <button onClick={() => saveTask({ ...task, name, estimate, dependsOn })}>
-        Save
-      </button>
+      <button onClick={() => saveTask()}>Save</button>
     </>
   );
-};
+});
 
 const TaskDisplayNode: FC<{ task: Task }> = ({ task }) => {
   return (
