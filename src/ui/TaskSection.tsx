@@ -1,9 +1,10 @@
 import { observer } from "mobx-react-lite";
-import { FC } from "react";
+import { FC, useState } from "react";
 import { useTaskStore } from "../context/TaskStoreContext";
-import { TaskNode } from "./TaskNode";
+import { TaskEditNode, TaskNode } from "./TaskNode";
 
 export const TaskSection: FC = observer(() => {
+  const [isAdding, setIsAdding] = useState(false);
   const taskStore = useTaskStore();
   const tasks = taskStore.getTasks();
 
@@ -24,6 +25,14 @@ export const TaskSection: FC = observer(() => {
           {unassignedTasks.map((task) => (
             <TaskNode key={task.id} task={task} />
           ))}
+          {isAdding ? (
+            <TaskEditNode
+              task={undefined}
+              stopEditing={() => setIsAdding(false)}
+            />
+          ) : (
+            <button onClick={() => setIsAdding(true)}>Add Task</button>
+          )}
         </div>
       </div>
       <div>

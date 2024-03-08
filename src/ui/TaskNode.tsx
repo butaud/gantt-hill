@@ -4,7 +4,7 @@ import { useTaskStore } from "../context/TaskStoreContext";
 import { observer } from "mobx-react-lite";
 
 export type ITaskNodeProps = {
-  task: Task | undefined;
+  task: Task;
 };
 
 export const TaskNode: FC<ITaskNodeProps> = observer(({ task }) => {
@@ -27,7 +27,7 @@ export const TaskNode: FC<ITaskNodeProps> = observer(({ task }) => {
   );
 });
 
-const TaskEditNode: FC<{
+export const TaskEditNode: FC<{
   task: Task | undefined;
   stopEditing: () => void;
 }> = observer(({ task, stopEditing }) => {
