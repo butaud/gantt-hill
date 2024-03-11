@@ -20,10 +20,36 @@ export class DevStore {
     this.devs = this.devs.filter((d) => d !== dev);
   }
 
+  get allAssignedTasks() {
+    return this.devs.flatMap((dev) => dev.tasks);
+  }
+
+  get tasksWithUnassignedDependencies() {
+    const result = new Set<Task>();
+    let lastResultSize = 0;
+    const allAssignedTasks = this.allAssignedTasks;
+    do {
+      lastResultSize = result.size;
+      for (const task of allAssignedTasks) {
+        for (const dependency of task.dependsOn) {
+          if (
+            !allAssignedTasks.includes(dependency) ||
+            result.has(dependency)
+          ) {
+            result.add(task);
+          }
+        }
+      }
+    } while (lastResultSize !== result.size);
+    return result;
+  }
+
   get schedule() {
     const result: Schedule = {};
     let now = 0;
-    const tasksToSchedule = this.devs.flatMap((dev) => dev.tasks).length;
+    const tasksToSchedule =
+      this.allAssignedTasks.length - this.tasksWithUnassignedDependencies.size;
+
     const isWorkingOnATask = (dev: Dev, now: number) =>
       dev.tasks.some(
         (task) =>

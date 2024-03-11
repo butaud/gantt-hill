@@ -66,3 +66,18 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+.arrow {
+  pointer-events: none;
+}
+
+.arrow__path {
+  stroke: #000;
+  fill: #000;
+  stroke-dasharray: 4 2;
+}
+
+.arrow__head line {
+  stroke: #000;
+  stroke-width: 1px;
+}

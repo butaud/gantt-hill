@@ -2,6 +2,7 @@ import { FC, useState } from "react";
 import { Task } from "../model/task";
 import { useTaskStore } from "../context/TaskStoreContext";
 import { observer } from "mobx-react-lite";
+import { DependencyEditor } from "./DependencyEditor";
 
 export type ITaskNodeProps = {
   task: Task;
@@ -11,7 +12,7 @@ export const TaskNode: FC<ITaskNodeProps> = observer(({ task }) => {
   const [editing, setEditing] = useState(task === undefined);
 
   return (
-    <div>
+    <div id={`task-node-${task.id}`}>
       {editing || !task ? (
         <TaskEditNode task={task} stopEditing={() => setEditing(false)} />
       ) : (
@@ -47,7 +48,7 @@ export const TaskEditNode: FC<{
   };
 
   return (
-    <>
+    <form>
       <input
         type="text"
         value={name}
@@ -59,16 +60,29 @@ export const TaskEditNode: FC<{
         onChange={(e) => setEstimate(parseInt(e.target.value))}
       />
       <button onClick={() => saveTask()}>Save</button>
-    </>
+    </form>
   );
 });
 
-const TaskDisplayNode: FC<{ task: Task }> = ({ task }) => {
+const TaskDisplayNode: FC<{ task: Task }> = observer(({ task }) => {
+  const [editingDependencies, setEditingDependencies] = useState(false);
   return (
     <>
       <p>{task.name}</p>
       <p>{task.estimate}</p>
-      <p>Dependencies: {task.dependsOn.length}</p>
+      {editingDependencies ? (
+        <div>
+          <DependencyEditor task={task} />
+          <button onClick={() => setEditingDependencies(false)}>Done</button>
+        </div>
+      ) : (
+        <p>
+          <a href="#" onClick={() => setEditingDependencies(true)}>
+            Dependencies
+          </a>
+          : {task.dependsOn.length}
+        </p>
+      )}
     </>
   );
-};
+});
