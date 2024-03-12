@@ -71,6 +71,10 @@ export class Task {
     this.dependsOn = this.dependsOn.filter((t) => t !== task);
   }
 
+  setDependencies(tasks: Task[]) {
+    this.dependsOn = tasks;
+  }
+
   delete() {
     this.store.deleteTask(this);
   }

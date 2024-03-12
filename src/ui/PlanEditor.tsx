@@ -1,7 +1,8 @@
 import { DateTime } from "luxon";
-import { FC, useState } from "react";
+import { FC } from "react";
 import { TaskSection } from "./TaskSection";
 import { ScheduleSection } from "./ScheduleSection";
+import { EditableValue } from "./EditableValue";
 
 type IPlanEditorProps = {
   name: string;
@@ -16,30 +17,14 @@ export const PlanEditor: FC<IPlanEditorProps> = ({
   setPlanName,
   setPlanStart,
 }) => {
-  const [editing, setEditing] = useState(false);
   return (
     <div>
-      {editing ? (
-        <>
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setPlanName(e.target.value)}
-          />
-          <input
-            type="date"
-            value={start.toISODate() ?? undefined}
-            onChange={(e) => setPlanStart(DateTime.fromISO(e.target.value))}
-          />
-          <button onClick={() => setEditing(false)}>Stop Editing</button>
-        </>
-      ) : (
-        <>
-          <h2>{name}</h2>
-          <p>Starts: {start.toLocaleString()}</p>
-          <button onClick={() => setEditing(true)}>Edit</button>
-        </>
-      )}
+      <p>
+        <EditableValue value={name} onChange={setPlanName} />
+      </p>
+      <p>
+        <EditableValue value={start} onChange={setPlanStart} />
+      </p>
       <TaskSection />
       <ScheduleSection start={start} />
     </div>
