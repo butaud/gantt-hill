@@ -1,0 +1,5 @@
+.editableValueDisplay .value:hover {
+  cursor: pointer;
+  text-decoration: underline;
+  color: deepskyblue;
+}

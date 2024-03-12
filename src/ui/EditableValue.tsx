@@ -1,6 +1,8 @@
 import { DateTime } from "luxon";
 import { FC, useState } from "react";
 
+import "./EditableValue.css";
+
 type EditableValueType = string | number | DateTime | unknown;
 export type ICustomEditorProps<T> = {
   value: T;
@@ -72,9 +74,11 @@ export const EditableValue = <T extends EditableValueType>({
         />
       ) : (
         <>
-          <span>
+          <span className="editableValueDisplay">
             {label && <span>{label}: </span>}
-            <span onClick={() => setEditing(true)}>{displayValue}</span>
+            <span className="value" onClick={() => setEditing(true)}>
+              {displayValue}
+            </span>
           </span>
         </>
       )}
