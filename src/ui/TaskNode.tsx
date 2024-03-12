@@ -1,5 +1,5 @@
 import { FC, useState } from "react";
-import { Task } from "../model/task";
+import { DependencyCycleError, Task } from "../model/task";
 import { useTaskStore } from "../context/TaskStoreContext";
 import { observer } from "mobx-react-lite";
 import { EditableValue, ICustomEditorProps } from "./EditableValue";
@@ -73,7 +73,7 @@ const DependencyRenderer = ({
 
 const DependencyEditor: FC<
   ICustomEditorProps<{ task: Task; dependencies: Task[] }>
-> = ({ value: { task, dependencies }, onChange, onCancel }) => {
+> = ({ value: { task, dependencies }, error, onChange, onCancel }) => {
   const [localDependencies, setLocalDependencies] = useState(dependencies);
   const taskStore = useTaskStore();
   const allOtherTasks = taskStore.getTasks().filter((t) => t !== task);
@@ -85,8 +85,13 @@ const DependencyEditor: FC<
   const removeTaskFromLocal = (task: Task) => {
     setLocalDependencies(localDependencies.filter((t) => t !== task));
   };
+  const errorDisplay =
+    error instanceof DependencyCycleError ? (
+      <div style={{ color: "red" }}>{error.message}</div>
+    ) : null;
   return (
     <form>
+      {errorDisplay}
       <ul>
         {allOtherTasks.map((t) => (
           <li key={t.id}>
@@ -106,11 +111,14 @@ const DependencyEditor: FC<
         ))}
       </ul>
       <button
+        type="button"
         onClick={() => onChange({ task, dependencies: localDependencies })}
       >
         Save
       </button>
-      <button onClick={onCancel}>Cancel</button>
+      <button type="button" onClick={onCancel}>
+        Cancel
+      </button>
     </form>
   );
 };

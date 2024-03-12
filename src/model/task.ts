@@ -63,7 +63,28 @@ export class Task {
     this.estimate = estimate;
   }
 
+  private proposedDependenciesCauseACycle(proposedDependencies: Task[]) {
+    const toVisit = [...proposedDependencies];
+    const visited = new Set<Task>();
+    while (toVisit.length > 0) {
+      const task = toVisit.pop()!;
+      if (task.dependsOn.some((t) => t === this)) {
+        return true;
+      }
+      visited.add(task);
+      toVisit.push(
+        ...task.dependsOn.filter(
+          (t) => !visited.has(t) && !toVisit.includes(t),
+        ),
+      );
+    }
+    return false;
+  }
+
   addDependency(task: Task) {
+    if (this.proposedDependenciesCauseACycle([...this.dependsOn, task])) {
+      throw new DependencyCycleError();
+    }
     this.dependsOn.push(task);
   }
 
@@ -72,6 +93,9 @@ export class Task {
   }
 
   setDependencies(tasks: Task[]) {
+    if (this.proposedDependenciesCauseACycle(tasks)) {
+      throw new DependencyCycleError();
+    }
     this.dependsOn = tasks;
   }
 
@@ -81,5 +105,11 @@ export class Task {
 
   get isAssigned() {
     return this.devStore.getDevs().some((dev) => dev.tasks.includes(this));
+  }
+}
+
+export class DependencyCycleError extends Error {
+  constructor() {
+    super("Dependency would cause a cycle");
   }
 }

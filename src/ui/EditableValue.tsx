@@ -6,12 +6,14 @@ import "./EditableValue.css";
 type EditableValueType = string | number | DateTime | unknown;
 export type ICustomEditorProps<T> = {
   value: T;
+  error: Error | undefined;
   onChange: (value: T) => void;
   onCancel: () => void;
 };
 export type IEditableValueProps<T extends EditableValueType> = {
   value: T;
   onChange: (value: T) => void;
+  errorRenderer?: (error: Error) => string;
   customRenderer?: (value: T) => string;
   customEditor?: FC<ICustomEditorProps<T>>;
   label?: string;
@@ -37,10 +39,20 @@ export const EditableValue = <T extends EditableValueType>({
   label,
 }: IEditableValueProps<T>) => {
   const [editing, setEditing] = useState(false);
+  const [error, setError] = useState<Error | undefined>();
 
   const handleChange = (value: T) => {
-    onChange(value);
-    setEditing(false);
+    setError(undefined);
+    try {
+      onChange(value);
+      setEditing(false);
+    } catch (e) {
+      if (e instanceof Error) {
+        setError(e);
+      } else {
+        setError(new Error(`Error setting value: ${e}`));
+      }
+    }
   };
 
   if (
@@ -63,6 +75,7 @@ export const EditableValue = <T extends EditableValueType>({
     }
     return `${value}`;
   })();
+
   return (
     <>
       {editing ? (
@@ -70,6 +83,7 @@ export const EditableValue = <T extends EditableValueType>({
           value={value}
           onChange={handleChange}
           onCancel={() => setEditing(false)}
+          error={error}
           customEditor={customEditor}
         />
       ) : (
@@ -90,6 +104,7 @@ type ValueEditorProps<T extends EditableValueType> = {
   value: T;
   onChange: (value: T) => void;
   onCancel: () => void;
+  error: Error | undefined;
   customEditor?: FC<ICustomEditorProps<T>>;
 };
 
@@ -97,6 +112,7 @@ const ValueEditor = <T extends EditableValueType>({
   value,
   onChange,
   onCancel,
+  error,
   customEditor,
 }: ValueEditorProps<T>) => {
   const [localValue, setLocalValue] = useState(value);
@@ -114,7 +130,7 @@ const ValueEditor = <T extends EditableValueType>({
   };
 
   if (customEditor) {
-    return customEditor({ value, onChange, onCancel });
+    return customEditor({ value, error, onChange, onCancel });
   }
   if (isString(localValue)) {
     return (
