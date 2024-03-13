@@ -3,15 +3,29 @@ import { FC } from "react";
 import { Dev, DevDay } from "../model/dev";
 import { Task } from "../model/task";
 
+import "./DayCell.css";
+
 export const DayCell: FC<{
   dev: Dev;
   day: number;
   devDay: DevDay;
   isEditingOof: boolean;
 }> = observer(({ dev, day, devDay, isEditingOof }) => {
-  const isOof = dev.isOofDay(day);
+  const cellClass = (() => {
+    if (devDay instanceof Task) {
+      return "task";
+    }
+    switch (devDay) {
+      case "OOF":
+        return "oof";
+      case "BLOCKED":
+        return "blocked";
+      case "FREE":
+        return "free";
+    }
+  })();
   return (
-    <td style={{ backgroundColor: isOof ? "lightgray" : "white" }}>
+    <td className={cellClass}>
       {isEditingOof ? (
         <OofEditor dev={dev} day={day} />
       ) : devDay instanceof Task ? (

@@ -1,0 +1,15 @@
+td.task {
+  background-color: aliceblue;
+}
+
+td.free {
+  background-color: white;
+}
+
+td.blocked {
+  background-color: lightcoral;
+}
+
+td.oof {
+  background-color: lightgray;
+}
