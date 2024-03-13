@@ -1,7 +1,10 @@
 import { makeAutoObservable } from "mobx";
 import { Task } from "./task";
 
-export type Schedule = Record<number, number>;
+const MAX_SCHEDULE_DAYS = 1000;
+
+export type DevDay = Task | "OOF" | "BLOCKED" | "FREE";
+export type Schedule = DevDay[][];
 export class DevStore {
   private devs: Dev[] = [];
   constructor() {
@@ -45,54 +48,78 @@ export class DevStore {
   }
 
   get schedule() {
-    const result: Schedule = {};
+    const result: Schedule = this.devs.map(() => []);
     let now = 0;
-    const tasksToSchedule =
-      this.allAssignedTasks.length - this.tasksWithUnassignedDependencies.size;
+    const tasksToSchedule = this.allAssignedTasks.filter(
+      (task) => !this.tasksWithUnassignedDependencies.has(task),
+    );
+    const scheduledTasks = new Set<Task>();
 
-    const isWorkingOnATask = (dev: Dev, now: number) =>
-      dev.tasks.some(
-        (task) =>
-          result[task.id] <= now && now < result[task.id] + task.estimate,
-      );
+    const isScheduledTaskCompleted = (task: Task, now: number) => {
+      const daysWorked =
+        result
+          .find((devTasks) => devTasks.includes(task))
+          ?.slice(0, now)
+          ?.filter((t) => t === task).length ?? 0;
+      return daysWorked >= task.estimate;
+    };
 
-    const isTaskReadyToStart = (task: Task, now: number): boolean =>
-      task.dependsOn.every(
-        (dependency) => result[dependency.id] + dependency.estimate <= now,
-      );
+    let allTasksAreDone = true;
+    do {
+      allTasksAreDone = true;
+      this.devs.forEach((dev, devIndex) => {
+        const filteredTasks = dev.tasks.filter((task) =>
+          tasksToSchedule.includes(task),
+        );
+        const currentTask = filteredTasks.find(
+          (task) =>
+            scheduledTasks.has(task) && !isScheduledTaskCompleted(task, now),
+        );
+        const nextTask = filteredTasks.find(
+          (task) => !scheduledTasks.has(task),
+        );
 
-    while (Object.keys(result).length < tasksToSchedule) {
-      for (const dev of this.devs) {
-        if (!isWorkingOnATask(dev, now) && !dev.isOofDay(now)) {
-          const nextTask = dev.tasks.find(
-            (task) => result[task.id] === undefined,
-          );
-          if (nextTask !== undefined && isTaskReadyToStart(nextTask, now)) {
-            result[nextTask.id] = now;
-          }
+        if (currentTask || nextTask) {
+          allTasksAreDone = false;
         }
-      }
+        if (dev.isOofDay(now)) {
+          result[devIndex].push("OOF");
+          return;
+        }
+
+        if (currentTask) {
+          result[devIndex].push(currentTask);
+          return;
+        }
+        if (!nextTask) {
+          result[devIndex].push("FREE");
+          return;
+        }
+
+        if (
+          nextTask.dependsOn.some(
+            (dependency) => !isScheduledTaskCompleted(dependency, now),
+          )
+        ) {
+          result[devIndex].push("BLOCKED");
+          return;
+        }
+
+        scheduledTasks.add(nextTask);
+        result[devIndex].push(nextTask);
+      });
       now++;
-    }
+    } while (!allTasksAreDone && now < MAX_SCHEDULE_DAYS);
+
     return result;
   }
 
   get scheduleEnd() {
-    let maxTask: Task | undefined;
-    for (const dev of this.devs) {
-      for (const task of dev.tasks) {
-        if (
-          maxTask === undefined ||
-          this.schedule[task.id] + task.estimate >
-            this.schedule[maxTask.id] + maxTask.estimate
-        ) {
-          maxTask = task;
-        }
-      }
-    }
-    return maxTask === undefined
-      ? 0
-      : this.schedule[maxTask.id] + maxTask.estimate;
+    return this.schedule[0]?.length ?? 0;
+  }
+
+  getScheduleForDev(dev: Dev) {
+    return this.schedule[this.devs.indexOf(dev)];
   }
 }
 
@@ -148,5 +175,9 @@ export class Dev {
 
   isOofDay(day: number) {
     return this.oofDays.has(day);
+  }
+
+  get schedule() {
+    return this.store.getScheduleForDev(this);
   }
 }

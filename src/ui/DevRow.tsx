@@ -1,16 +1,30 @@
 import { observer } from "mobx-react-lite";
 import { FC } from "react";
-import { Dev, Schedule } from "../model/dev";
+import { Dev } from "../model/dev";
 import { DayCell } from "./DayCell";
+import { EditableValue } from "./EditableValue";
 
-export const DevRow: FC<{ dev: Dev; schedule: Schedule; end: number }> =
-  observer(({ dev, schedule, end }) => {
-    return (
-      <tr>
-        <td>{dev.name}</td>
-        {[...Array(end).keys()].map((day) => (
-          <DayCell key={day} day={day} dev={dev} schedule={schedule} />
-        ))}
-      </tr>
-    );
-  });
+export const DevRow: FC<{
+  dev: Dev;
+  isEditingOof: boolean;
+}> = observer(({ dev, isEditingOof }) => {
+  const setDevName = (newName: string) => {
+    dev.name = newName;
+  };
+  return (
+    <tr>
+      <td>
+        <EditableValue value={dev.name} onChange={setDevName} />
+      </td>
+      {dev.schedule.map((devDay, index) => (
+        <DayCell
+          key={index}
+          dev={dev}
+          day={index}
+          devDay={devDay}
+          isEditingOof={isEditingOof}
+        />
+      ))}
+    </tr>
+  );
+});

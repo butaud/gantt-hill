@@ -1,19 +1,28 @@
 import { DateTime } from "luxon";
 import { observer } from "mobx-react-lite";
-import { FC } from "react";
+import { FC, useState } from "react";
 import { useDevStore } from "../context/DevStoreContext";
 import { DevRow } from "./DevRow";
 
 export const ScheduleSection: FC<{ start: DateTime }> = observer(
   ({ start }) => {
+    const [isEditingOof, setIsEditingOof] = useState(false);
     const devStore = useDevStore();
     const devs = devStore.getDevs();
-    const planSchedule = devStore.schedule;
     const end = devStore.scheduleEnd;
     const countOfTasksWithUnassignedDependencies =
       devStore.tasksWithUnassignedDependencies.size;
     return (
       <div>
+        <h2>Schedule</h2>
+        {isEditingOof ? (
+          <button onClick={() => setIsEditingOof(false)}>
+            Done Editing OOF
+          </button>
+        ) : (
+          <button onClick={() => setIsEditingOof(true)}>Edit OOF</button>
+        )}
+
         {countOfTasksWithUnassignedDependencies > 0 && (
           <p>
             Warning: {countOfTasksWithUnassignedDependencies}{" "}
@@ -32,12 +41,7 @@ export const ScheduleSection: FC<{ start: DateTime }> = observer(
               ))}
             </tr>
             {devs.map((dev) => (
-              <DevRow
-                key={dev.id}
-                dev={dev}
-                schedule={planSchedule}
-                end={end}
-              />
+              <DevRow isEditingOof={isEditingOof} key={dev.id} dev={dev} />
             ))}
           </thead>
         </table>
