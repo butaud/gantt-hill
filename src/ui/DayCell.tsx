@@ -4,13 +4,15 @@ import { Dev, DevDay } from "../model/dev";
 import { Task } from "../model/task";
 
 import "./DayCell.css";
+import { useStateStore } from "../context/StateStoreContext";
 
 export const DayCell: FC<{
   dev: Dev;
   day: number;
   devDay: DevDay;
-  isEditingOof: boolean;
-}> = observer(({ dev, day, devDay, isEditingOof }) => {
+}> = observer(({ dev, day, devDay }) => {
+  const stateStore = useStateStore();
+  const isEditingOof = stateStore.isEditingOof;
   const cellClass = (() => {
     if (devDay instanceof Task) {
       return "task";

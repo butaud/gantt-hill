@@ -6,8 +6,7 @@ import { EditableValue } from "./EditableValue";
 
 export const DevRow: FC<{
   dev: Dev;
-  isEditingOof: boolean;
-}> = observer(({ dev, isEditingOof }) => {
+}> = observer(({ dev }) => {
   const setDevName = (newName: string) => {
     dev.name = newName;
   };
@@ -17,13 +16,7 @@ export const DevRow: FC<{
         <EditableValue value={dev.name} onChange={setDevName} />
       </td>
       {dev.schedule.map((devDay, index) => (
-        <DayCell
-          key={index}
-          dev={dev}
-          day={index}
-          devDay={devDay}
-          isEditingOof={isEditingOof}
-        />
+        <DayCell key={index} dev={dev} day={index} devDay={devDay} />
       ))}
     </tr>
   );

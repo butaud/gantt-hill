@@ -7,7 +7,10 @@ import { DevStore } from "./model/dev";
 import { DevStoreProvider } from "./context/DevStoreContext";
 import { TaskStoreProvider } from "./context/TaskStoreContext";
 import { DateTime } from "luxon";
+import { StateStore } from "./model/state";
+import { StateStoreProvider } from "./context/StateStoreContext";
 
+const stateStore = new StateStore();
 const devStore = new DevStore();
 const taskStore = new TaskStore(devStore);
 const t1 = taskStore.addTask({ name: "Task 1", estimate: 3 });
@@ -27,17 +30,19 @@ function App() {
   return (
     <DevStoreProvider store={devStore}>
       <TaskStoreProvider store={taskStore}>
-        <div className="App">
-          <header className="App-header">
-            <h1>Gantt Hill</h1>
-          </header>
-          <PlanEditor
-            name={name}
-            start={start}
-            setPlanName={setName}
-            setPlanStart={setStart}
-          />
-        </div>
+        <StateStoreProvider store={stateStore}>
+          <div className="App">
+            <header className="App-header">
+              <h1>Gantt Hill</h1>
+            </header>
+            <PlanEditor
+              name={name}
+              start={start}
+              setPlanName={setName}
+              setPlanStart={setStart}
+            />
+          </div>
+        </StateStoreProvider>
       </TaskStoreProvider>
     </DevStoreProvider>
   );
