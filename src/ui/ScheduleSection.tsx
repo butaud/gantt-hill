@@ -17,13 +17,11 @@ export const ScheduleSection: FC<{ start: DateTime }> = observer(
       <div>
         <h2>Schedule</h2>
         {stateStore.isEditingOof ? (
-          <button onClick={() => (stateStore.isEditingOof = false)}>
+          <button onClick={() => stateStore.stopEditingOof()}>
             Done Editing OOF
           </button>
         ) : (
-          <button onClick={() => (stateStore.isEditingOof = true)}>
-            Edit OOF
-          </button>
+          <button onClick={() => stateStore.startEditingOof()}>Edit OOF</button>
         )}
 
         {countOfTasksWithUnassignedDependencies > 0 && (

@@ -6,4 +6,12 @@ export class StateStore {
   constructor() {
     makeAutoObservable(this);
   }
+
+  startEditingOof() {
+    this.isEditingOof = true;
+  }
+
+  stopEditingOof() {
+    this.isEditingOof = false;
+  }
 }
