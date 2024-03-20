@@ -16,13 +16,26 @@ export const ScheduleSection: FC<{ start: DateTime }> = observer(
     return (
       <div>
         <h2>Schedule</h2>
-        {stateStore.isEditingOof ? (
-          <button onClick={() => stateStore.stopEditingOof()}>
-            Done Editing OOF
-          </button>
-        ) : (
-          <button onClick={() => stateStore.startEditingOof()}>Edit OOF</button>
-        )}
+        <div style={{ display: "flex", justifyContent: "space-evenly" }}>
+          {stateStore.isEditingOof ? (
+            <button onClick={() => stateStore.stopEditingOof()}>
+              Done Editing OOF
+            </button>
+          ) : (
+            <button onClick={() => stateStore.startEditingOof()}>
+              Edit OOF
+            </button>
+          )}
+          {stateStore.isRearrangingTasks ? (
+            <button onClick={() => stateStore.stopRearrangingTasks()}>
+              Done Rearranging Tasks
+            </button>
+          ) : (
+            <button onClick={() => stateStore.startRearrangingTasks()}>
+              Rearrange Tasks
+            </button>
+          )}
+        </div>
 
         {countOfTasksWithUnassignedDependencies > 0 && (
           <p>
@@ -35,12 +48,14 @@ export const ScheduleSection: FC<{ start: DateTime }> = observer(
         )}
         <table>
           <thead>
-            <tr>
-              <th></th>
-              {[...Array(end).keys()].map((day) => (
-                <DayHeader key={day} day={start.plus({ days: day })} />
-              ))}
-            </tr>
+            {!stateStore.isRearrangingTasks && (
+              <tr>
+                <th></th>
+                {[...Array(end).keys()].map((day) => (
+                  <DayHeader key={day} day={start.plus({ days: day })} />
+                ))}
+              </tr>
+            )}
             {devs.map((dev) => (
               <DevRow key={dev.id} dev={dev} />
             ))}

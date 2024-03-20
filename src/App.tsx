@@ -16,10 +16,12 @@ const taskStore = new TaskStore(devStore);
 const t1 = taskStore.addTask({ name: "Task 1", estimate: 3 });
 const t2 = taskStore.addTask({ name: "Task 2", estimate: 2 });
 taskStore.addTask({ name: "Task 3", estimate: 1 });
+const t4 = taskStore.addTask({ name: "Task 4", estimate: 6 });
 t2.addDependency(t1);
 const d1 = devStore.addDev({ name: "Dev 1" });
 const d2 = devStore.addDev({ name: "Dev 2" });
 d1.addTask(t1);
+d1.addTask(t4);
 d2.addTask(t2);
 [...Array(7).keys()].forEach((i) => d2.oofDays.add(i));
 
