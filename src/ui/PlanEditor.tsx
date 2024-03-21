@@ -3,6 +3,9 @@ import { FC } from "react";
 import { TaskSection } from "./TaskSection";
 import { ScheduleSection } from "./ScheduleSection";
 import { EditableValue } from "./EditableValue";
+import { DragDropContext, OnDragEndResponder } from "@hello-pangea/dnd";
+import { useDevStore } from "../context/DevStoreContext";
+import { useTaskStore } from "../context/TaskStoreContext";
 
 type IPlanEditorProps = {
   name: string;
@@ -17,6 +20,39 @@ export const PlanEditor: FC<IPlanEditorProps> = ({
   setPlanName,
   setPlanStart,
 }) => {
+  const devStore = useDevStore();
+  const taskStore = useTaskStore();
+
+  const onDragEnd: OnDragEndResponder = (event) => {
+    if (event.destination && event.source) {
+      const task = taskStore.getTask(parseInt(event.draggableId));
+      if (task) {
+        const getDev = (droppableId: string) => {
+          if (droppableId === "unassigned") {
+            return undefined;
+          }
+          const dev = devStore.getDev(parseInt(droppableId));
+          if (!dev) {
+            throw new Error(`No dev with id ${droppableId}`);
+          }
+          return dev;
+        };
+        const sourceDev = getDev(event.source.droppableId);
+        const destinationDev = getDev(event.destination.droppableId);
+        // these steps handle all the cases
+        if (sourceDev) {
+          sourceDev.removeTask(task);
+        }
+
+        if (destinationDev) {
+          destinationDev.addTask(task, event.destination.index);
+        } else {
+          taskStore.moveExistingTask(task, event.destination.index);
+        }
+      }
+    }
+  };
+
   return (
     <div>
       <p>
@@ -25,8 +61,10 @@ export const PlanEditor: FC<IPlanEditorProps> = ({
       <p>
         <EditableValue value={start} onChange={setPlanStart} />
       </p>
-      <TaskSection />
-      <ScheduleSection start={start} />
+      <DragDropContext onDragEnd={onDragEnd}>
+        <TaskSection />
+        <ScheduleSection start={start} />
+      </DragDropContext>
     </div>
   );
 };

@@ -19,8 +19,16 @@ export class TaskStore {
     this.tasks.push(task);
     return task;
   }
+  moveExistingTask(task: Task, toIndex: number) {
+    const fromIndex = this.tasks.indexOf(task);
+    this.tasks.splice(fromIndex, 1);
+    this.tasks.splice(toIndex, 0, task);
+  }
   deleteTask(task: Task) {
     this.tasks = this.tasks.filter((t) => t !== task);
+  }
+  getTask(id: number) {
+    return this.tasks.find((task) => task.id === id);
   }
 }
 

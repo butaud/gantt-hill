@@ -156,17 +156,16 @@ export class Dev {
     this.name = name;
   }
 
-  addTask(task: Task) {
-    this.tasks.push(task);
+  addTask(task: Task, index?: number) {
+    if (index === undefined) {
+      this.tasks.push(task);
+    } else {
+      this.tasks.splice(index, 0, task);
+    }
   }
 
   removeTask(task: Task) {
     this.tasks = this.tasks.filter((t) => t !== task);
-  }
-
-  reorderTask(task: Task, index: number) {
-    this.tasks = this.tasks.filter((t) => t !== task);
-    this.tasks.splice(index, 0, task);
   }
 
   addOofDay(day: number) {
