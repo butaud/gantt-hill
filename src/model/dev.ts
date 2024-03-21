@@ -121,6 +121,10 @@ export class DevStore {
   getScheduleForDev(dev: Dev) {
     return this.schedule[this.devs.indexOf(dev)];
   }
+
+  getDev(id: number) {
+    return this.devs.find((dev) => dev.id === id);
+  }
 }
 
 export type DevDraft = {

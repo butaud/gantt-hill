@@ -4,6 +4,7 @@ import { FC } from "react";
 import { useDevStore } from "../context/DevStoreContext";
 import { DevRow } from "./DevRow";
 import { useStateStore } from "../context/StateStoreContext";
+import { DragDropContext, OnDragEndResponder } from "@hello-pangea/dnd";
 
 export const ScheduleSection: FC<{ start: DateTime }> = observer(
   ({ start }) => {
@@ -13,6 +14,25 @@ export const ScheduleSection: FC<{ start: DateTime }> = observer(
     const end = devStore.scheduleEnd;
     const countOfTasksWithUnassignedDependencies =
       devStore.tasksWithUnassignedDependencies.size;
+
+    const onDragEnd: OnDragEndResponder = (event) => {
+      if (event.destination && event.source) {
+        const sourceDev = devStore.getDev(parseInt(event.source.droppableId));
+        const destinationDev = devStore.getDev(
+          parseInt(event.destination.droppableId),
+        );
+        if (sourceDev && destinationDev) {
+          const task = sourceDev.tasks[event.source.index];
+          if (sourceDev === destinationDev) {
+            sourceDev.reorderTask(task, event.destination.index);
+          } else {
+            sourceDev.removeTask(task);
+            destinationDev.addTask(task);
+            destinationDev.reorderTask(task, event.destination.index);
+          }
+        }
+      }
+    };
     return (
       <div>
         <h2>Schedule</h2>
@@ -56,10 +76,14 @@ export const ScheduleSection: FC<{ start: DateTime }> = observer(
                 ))}
               </tr>
             )}
-            {devs.map((dev) => (
-              <DevRow key={dev.id} dev={dev} />
-            ))}
           </thead>
+          <tbody>
+            <DragDropContext onDragEnd={onDragEnd}>
+              {devs.map((dev) => (
+                <DevRow key={dev.id} dev={dev} />
+              ))}
+            </DragDropContext>
+          </tbody>
         </table>
       </div>
     );

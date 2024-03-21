@@ -35,32 +35,24 @@ export const DevRow: FC<{
 });
 
 export const TaskRearrangeDevRow: FC<{ dev: Dev }> = observer(({ dev }) => {
-  const onDragEnd: OnDragEndResponder = (result) => {
-    if (!result.destination) {
-      return;
-    }
-    dev.reorderTask(dev.tasks[result.source.index], result.destination.index);
-  };
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
-      <Droppable droppableId={dev.id.toString()} direction="horizontal">
-        {(provided) => (
-          <tr
-            style={{ width: "100%" }}
-            ref={provided.innerRef}
-            {...provided.droppableProps}
-          >
-            <td>{dev.name}</td>
-            <td style={{ display: "flex" }}>
-              {dev.tasks.map((task, index) => (
-                <RearrangeableTask key={index} task={task} index={index} />
-              ))}
-              {provided.placeholder}
-            </td>
-          </tr>
-        )}
-      </Droppable>
-    </DragDropContext>
+    <Droppable droppableId={dev.id.toString()} direction="horizontal">
+      {(provided) => (
+        <tr
+          style={{ width: "100%" }}
+          ref={provided.innerRef}
+          {...provided.droppableProps}
+        >
+          <td>{dev.name}</td>
+          <td style={{ display: "flex" }}>
+            {dev.tasks.map((task, index) => (
+              <RearrangeableTask key={task.id} task={task} index={index} />
+            ))}
+            {provided.placeholder}
+          </td>
+        </tr>
+      )}
+    </Droppable>
   );
 });
 
