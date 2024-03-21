@@ -11,8 +11,8 @@ export const ScheduleSection: FC<{ start: DateTime }> = observer(
     const stateStore = useStateStore();
     const devs = devStore.getDevs();
     const end = devStore.scheduleEnd;
-    const countOfTasksWithUnassignedDependencies =
-      devStore.tasksWithUnassignedDependencies.size;
+    const tasksWithUnassignedDependencies =
+      devStore.tasksWithUnassignedDependencies;
 
     return (
       <div>
@@ -38,13 +38,13 @@ export const ScheduleSection: FC<{ start: DateTime }> = observer(
           )}
         </div>
 
-        {countOfTasksWithUnassignedDependencies > 0 && (
+        {tasksWithUnassignedDependencies.size > 0 && (
           <p>
-            Warning: {countOfTasksWithUnassignedDependencies}{" "}
-            {countOfTasksWithUnassignedDependencies === 1
-              ? "task has "
-              : "tasks have "}
-            unassigned dependencies.
+            The following tasks have unassigned dependencies and cannot be
+            scheduled:{" "}
+            {Array.from(tasksWithUnassignedDependencies)
+              .map((task) => task.name)
+              .join(", ")}
           </p>
         )}
         <table>
