@@ -5,6 +5,8 @@ import { useDevStore } from "../context/DevStoreContext";
 import { DevRow } from "./DevRow";
 import { useStateStore } from "../context/StateStoreContext";
 
+import "./ScheduleSection.css";
+
 export const ScheduleSection: FC<{ start: DateTime }> = observer(
   ({ start }) => {
     const devStore = useDevStore();
@@ -47,11 +49,17 @@ export const ScheduleSection: FC<{ start: DateTime }> = observer(
               .join(", ")}
           </p>
         )}
-        <table>
+        <table className="schedule">
           <thead>
+            {stateStore.isRearrangingTasks && (
+              <tr>
+                <th>Dev</th>
+                <th>Tasks</th>
+              </tr>
+            )}
             {!stateStore.isRearrangingTasks && (
               <tr>
-                <th></th>
+                <th>Dev</th>
                 {[...Array(end).keys()].map((day) => (
                   <DayHeader key={day} day={start.plus({ days: day })} />
                 ))}

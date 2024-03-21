@@ -118,6 +118,14 @@ export class DevStore {
     return this.schedule[0]?.length ?? 0;
   }
 
+  get highestTaskTotal() {
+    return Math.max(
+      ...this.devs.map((dev) =>
+        dev.tasks.reduce((total, task) => total + task.estimate, 0),
+      ),
+    );
+  }
+
   getScheduleForDev(dev: Dev) {
     return this.schedule[this.devs.indexOf(dev)];
   }

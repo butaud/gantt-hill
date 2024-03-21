@@ -1,0 +1,22 @@
+td.rearrangeCell {
+  display: flex;
+}
+
+td.rearrangeCell div {
+  margin: 0 5px;
+}
+
+ul.dropZone {
+  min-width: 150px;
+  min-height: 200px;
+  border: 2px solid rgb(128, 164, 218);
+  padding: 10px;
+}
+
+td.dropZone {
+  border: 2px solid rgb(128, 164, 218);
+}
+
+ul.dropZone div {
+  margin: 5px 0;
+}

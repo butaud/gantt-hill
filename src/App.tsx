@@ -33,17 +33,22 @@ function App() {
     <DevStoreProvider store={devStore}>
       <TaskStoreProvider store={taskStore}>
         <StateStoreProvider store={stateStore}>
-          <div className="App">
-            <header className="App-header">
-              <h1>Gantt Hill</h1>
-            </header>
+          <header className="app-header">
+            <h1>Gantt Hill</h1>
+            <nav className="top-controls">
+              <button>Save</button>
+              <button>Load</button>
+              <button>Export as Mermaid</button>
+            </nav>
+          </header>
+          <main className="main-content">
             <PlanEditor
               name={name}
               start={start}
               setPlanName={setName}
               setPlanStart={setStart}
             />
-          </div>
+          </main>
         </StateStoreProvider>
       </TaskStoreProvider>
     </DevStoreProvider>

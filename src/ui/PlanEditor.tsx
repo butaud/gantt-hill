@@ -7,6 +7,8 @@ import { DragDropContext, OnDragEndResponder } from "@hello-pangea/dnd";
 import { useDevStore } from "../context/DevStoreContext";
 import { useTaskStore } from "../context/TaskStoreContext";
 
+import "./PlanEditor.css";
+
 type IPlanEditorProps = {
   name: string;
   start: DateTime;
@@ -54,17 +56,23 @@ export const PlanEditor: FC<IPlanEditorProps> = ({
   };
 
   return (
-    <div>
-      <p>
-        <EditableValue value={name} onChange={setPlanName} />
-      </p>
-      <p>
-        <EditableValue value={start} onChange={setPlanStart} />
-      </p>
+    <>
+      <section className="planMetadata">
+        <p>
+          <EditableValue value={name} onChange={setPlanName} />
+        </p>
+        <p>
+          <EditableValue value={start} onChange={setPlanStart} />
+        </p>
+      </section>
       <DragDropContext onDragEnd={onDragEnd}>
-        <TaskSection />
-        <ScheduleSection start={start} />
+        <section className="tasks">
+          <TaskSection />
+        </section>
+        <section className="schedule">
+          <ScheduleSection start={start} />
+        </section>
       </DragDropContext>
-    </div>
+    </>
   );
 };
