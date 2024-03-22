@@ -41,10 +41,10 @@ jobs:
           cache: "yarn"
       - name: Install submodule
         run: yarn
-        working-directory: ./packages/minutes-model
+        working-directory: ./packages/gantt-hill
       - name: Build submodule
         run: yarn build
-        working-directory: ./packages/minutes-model
+        working-directory: ./packages/gantt-hill
       - name: Install dependencies
         run: yarn
       - name: Build
