@@ -4,6 +4,12 @@
   justify-content: space-evenly;
 }
 
+.task-container {
+  max-height: 400px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
 @media (max-width: 800px) {
   .task-section {
     flex-direction: column;

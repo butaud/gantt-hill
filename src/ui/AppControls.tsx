@@ -19,6 +19,7 @@ export const AppControls: FC = () => {
 
     // get a local file handle to save the JSON
     const handle = await window.showSaveFilePicker({
+      suggestedName: `${planStore.title || "untitled"}.json`,
       types: [
         {
           description: "JSON",

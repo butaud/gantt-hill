@@ -23,7 +23,7 @@ export const TaskSection: FC = observer(() => {
         {stateStore.isRearrangingTasks ? (
           <TaskRearrangeUnassignedTasks tasks={unassignedTasks} />
         ) : (
-          <div>
+          <div className="task-container">
             {unassignedTasks.map((task) => (
               <TaskNode key={task.id} task={task} />
             ))}
@@ -37,7 +37,7 @@ export const TaskSection: FC = observer(() => {
       </div>
       <div>
         <h3>Assigned Tasks</h3>
-        <ul>
+        <ul className="task-container">
           {assignedTasks.map((task) => (
             <TaskNode key={task.id} task={task} />
           ))}
