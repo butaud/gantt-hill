@@ -124,8 +124,6 @@ export class Task {
     const transformedHash = Math.sin(hash) * 10000;
     hash = Math.abs(Math.floor(transformedHash * transformedHash));
 
-    console.log(`${this.name} -> ${hash}`);
-
     const hue = hash % 360;
     const saturation = 50;
     const lightness = 50;
