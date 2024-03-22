@@ -60,6 +60,15 @@ export const PlanEditor: FC = observer(() => {
             onChange={(newDate) => planStore.setStartDate(newDate)}
           />
         </p>
+        <p>
+          Exclude weekends:{" "}
+          <EditableValue
+            value={planStore.excludeWeekends}
+            onChange={(newExcludeWeekends) =>
+              planStore.setExcludeWeekends(newExcludeWeekends)
+            }
+          />
+        </p>
       </section>
       <DragDropContext onDragEnd={onDragEnd}>
         <section className="tasks">

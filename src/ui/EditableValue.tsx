@@ -3,7 +3,7 @@ import { FC, useState } from "react";
 
 import "./EditableValue.css";
 
-type EditableValueType = string | number | DateTime | unknown;
+type EditableValueType = string | number | boolean | DateTime | unknown;
 export type ICustomEditorProps<T> = {
   value: T;
   error: Error | undefined;
@@ -25,6 +25,10 @@ const isString = (value: EditableValueType): value is string => {
 
 const isNumber = (value: EditableValueType): value is number => {
   return typeof value === "number";
+};
+
+const isBoolean = (value: EditableValueType): value is boolean => {
+  return typeof value === "boolean";
 };
 
 const isDateTime = (value: EditableValueType): value is DateTime => {
@@ -58,6 +62,7 @@ export const EditableValue = <T extends EditableValueType>({
   if (
     !isString(value) &&
     !isNumber(value) &&
+    !isBoolean(value) &&
     !isDateTime(value) &&
     !customRenderer
   ) {
@@ -72,6 +77,9 @@ export const EditableValue = <T extends EditableValueType>({
     }
     if (isDateTime(value)) {
       return value.toISODate();
+    }
+    if (isBoolean(value)) {
+      return value ? "Yes" : "No";
     }
     return `${value}`;
   })();
@@ -153,6 +161,18 @@ const ValueEditor = <T extends EditableValueType>({
         type="number"
         value={localValue}
         onChange={(e) => setLocalValue(parseInt(e.target.value) as T)}
+      />
+    );
+  }
+  if (isBoolean(localValue)) {
+    return (
+      <input
+        autoFocus
+        onKeyUp={onKeyUp}
+        onBlur={onBlur}
+        type="checkbox"
+        checked={localValue}
+        onChange={(e) => setLocalValue(e.target.checked as T)}
       />
     );
   }

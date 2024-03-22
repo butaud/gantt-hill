@@ -4,6 +4,7 @@ import { makeAutoObservable } from "mobx";
 export class PlanStore {
   title = "";
   startDate = DateTime.now();
+  excludeWeekends = true;
 
   constructor() {
     makeAutoObservable(this);
@@ -17,7 +18,14 @@ export class PlanStore {
     this.startDate = date;
   }
 
+  setExcludeWeekends(excludeWeekends: boolean) {
+    this.excludeWeekends = excludeWeekends;
+  }
+
   isWeekend(day: number) {
+    if (!this.excludeWeekends) {
+      return false;
+    }
     return this.startDate.plus({ days: day }).weekday >= 6;
   }
 
