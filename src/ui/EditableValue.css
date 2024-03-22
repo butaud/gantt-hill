@@ -3,3 +3,23 @@
   text-decoration: underline;
   color: deepskyblue;
 }
+
+input.editableValue {
+  border: 1px solid transparent;
+  border-radius: 4px;
+  padding: 0.1em 0.2em;
+  font-size: 0.8em;
+  font-weight: normal;
+  font-family: inherit;
+  transition: border-color 0.25s;
+  height: fit-content;
+  width: 100px;
+}
+
+input.editableValue[type="number"] {
+  width: 60px;
+}
+
+input.editableValue[type="checkbox"] {
+  width: 20px;
+}

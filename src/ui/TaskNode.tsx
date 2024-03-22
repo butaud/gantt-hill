@@ -4,6 +4,8 @@ import { useTaskStore } from "../context/TaskStoreContext";
 import { observer } from "mobx-react-lite";
 import { EditableValue, ICustomEditorProps } from "./EditableValue";
 
+import "./TaskNode.css";
+
 export type ITaskNodeProps = {
   task: Task;
 };
@@ -30,11 +32,8 @@ export const TaskNode: FC<ITaskNodeProps> = observer(({ task }) => {
   return (
     <div
       id={`task-node-${task.id}`}
+      className="task-node"
       style={{
-        width: "200px",
-        border: "1px solid black",
-        padding: "5px",
-        margin: "5px",
         backgroundColor: task.color,
       }}
     >
@@ -93,7 +92,7 @@ const DependencyEditor: FC<
   return (
     <form>
       {errorDisplay}
-      <ul>
+      <ul className="dependencies">
         {allOtherTasks.map((t) => (
           <li key={t.id}>
             <input
@@ -137,7 +136,7 @@ export const NewTaskNode: FC<{
   };
 
   return (
-    <form>
+    <form className="task-node">
       <input
         type="text"
         value={name}
@@ -148,8 +147,13 @@ export const NewTaskNode: FC<{
         value={estimate}
         onChange={(e) => setEstimate(parseInt(e.target.value))}
       />
-      <button onClick={() => saveTask()}>Save</button>
-      <button onClick={stopEditing}>Cancel</button>
+      <div
+        className="controls"
+        style={{ display: "flex", justifyContent: "space-evenly" }}
+      >
+        <button onClick={() => saveTask()}>Save</button>
+        <button onClick={stopEditing}>Cancel</button>
+      </div>
     </form>
   );
 });

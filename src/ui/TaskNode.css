@@ -1,0 +1,22 @@
+.task-node {
+  width: 200px;
+  border: 1px solid black;
+  padding: 5px;
+  margin: 5px;
+}
+
+.task-node .controls {
+  display: flex;
+  justify-content: space-between;
+  margin: 5px 0;
+}
+
+.task-node button {
+  font-weight: regular;
+  font-size: 0.8em;
+}
+
+ul.dependencies {
+  list-style-type: none;
+  padding: 0;
+}

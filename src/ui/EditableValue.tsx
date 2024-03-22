@@ -143,6 +143,7 @@ const ValueEditor = <T extends EditableValueType>({
   if (isString(localValue)) {
     return (
       <input
+        className="editableValue"
         autoFocus
         onKeyUp={onKeyUp}
         onBlur={onBlur}
@@ -155,6 +156,7 @@ const ValueEditor = <T extends EditableValueType>({
   if (isNumber(localValue)) {
     return (
       <input
+        className="editableValue"
         autoFocus
         onKeyUp={onKeyUp}
         onBlur={onBlur}
@@ -167,6 +169,7 @@ const ValueEditor = <T extends EditableValueType>({
   if (isBoolean(localValue)) {
     return (
       <input
+        className="editableValue"
         autoFocus
         onKeyUp={onKeyUp}
         onBlur={onBlur}
@@ -183,6 +186,7 @@ const ValueEditor = <T extends EditableValueType>({
   if (isDateTime(localValue)) {
     return (
       <input
+        className="editableValue"
         autoFocus
         onKeyUp={onKeyUp}
         onBlur={onBlur}
