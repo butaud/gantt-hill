@@ -9,3 +9,7 @@ td.blocked {
 td.oof {
   background-color: lightgray;
 }
+
+td.monday {
+  border-left: 2px solid black;
+}

@@ -1,4 +1,3 @@
-import { DateTime } from "luxon";
 import { FC } from "react";
 import { TaskSection } from "./TaskSection";
 import { ScheduleSection } from "./ScheduleSection";
@@ -8,20 +7,11 @@ import { useDevStore } from "../context/DevStoreContext";
 import { useTaskStore } from "../context/TaskStoreContext";
 
 import "./PlanEditor.css";
+import { observer } from "mobx-react-lite";
+import { usePlanStore } from "../context/PlanStoreContext";
 
-type IPlanEditorProps = {
-  name: string;
-  start: DateTime;
-  setPlanName: (name: string) => void;
-  setPlanStart: (start: DateTime) => void;
-};
-
-export const PlanEditor: FC<IPlanEditorProps> = ({
-  name,
-  start,
-  setPlanName,
-  setPlanStart,
-}) => {
+export const PlanEditor: FC = observer(() => {
+  const planStore = usePlanStore();
   const devStore = useDevStore();
   const taskStore = useTaskStore();
 
@@ -59,10 +49,16 @@ export const PlanEditor: FC<IPlanEditorProps> = ({
     <>
       <section className="planMetadata">
         <p>
-          <EditableValue value={name} onChange={setPlanName} />
+          <EditableValue
+            value={planStore.title}
+            onChange={(newName) => planStore.setTitle(newName)}
+          />
         </p>
         <p>
-          <EditableValue value={start} onChange={setPlanStart} />
+          <EditableValue
+            value={planStore.startDate}
+            onChange={(newDate) => planStore.setStartDate(newDate)}
+          />
         </p>
       </section>
       <DragDropContext onDragEnd={onDragEnd}>
@@ -70,9 +66,9 @@ export const PlanEditor: FC<IPlanEditorProps> = ({
           <TaskSection />
         </section>
         <section className="schedule">
-          <ScheduleSection start={start} />
+          <ScheduleSection />
         </section>
       </DragDropContext>
     </>
   );
-};
+});

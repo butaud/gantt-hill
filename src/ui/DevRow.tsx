@@ -7,6 +7,7 @@ import { useStateStore } from "../context/StateStoreContext";
 import { TaskRearrangeDevRow } from "./Rearrange";
 
 import "./DevRow.css";
+import { usePlanStore } from "../context/PlanStoreContext";
 
 export const DevRow: FC<{
   dev: Dev;
@@ -14,6 +15,7 @@ export const DevRow: FC<{
   const setDevName = (newName: string) => {
     dev.name = newName;
   };
+  const planStore = usePlanStore();
   const stateStore = useStateStore();
   if (stateStore.isRearrangingTasks) {
     return <TaskRearrangeDevRow dev={dev} />;
@@ -23,9 +25,12 @@ export const DevRow: FC<{
         <td className="devName">
           <EditableValue value={dev.name} onChange={setDevName} />
         </td>
-        {dev.schedule.map((devDay, index) => (
-          <DayCell key={index} dev={dev} day={index} devDay={devDay} />
-        ))}
+        {dev.schedule.map((devDay, index) => {
+          if (planStore.isWeekend(index)) {
+            return null;
+          }
+          return <DayCell key={index} dev={dev} day={index} devDay={devDay} />;
+        })}
       </tr>
     );
   }

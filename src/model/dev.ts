@@ -1,14 +1,17 @@
 import { makeAutoObservable } from "mobx";
 import { Task } from "./task";
+import { PlanStore } from "./plan";
 
 const MAX_SCHEDULE_DAYS = 1000;
 
-export type DevDay = Task | "OOF" | "BLOCKED" | "FREE";
+export type DevDay = Task | "OOF" | "BLOCKED" | "FREE" | "WEEKEND";
 export type Schedule = DevDay[][];
 export class DevStore {
   private devs: Dev[] = [];
-  constructor() {
+  private planStore: PlanStore;
+  constructor(planStore: PlanStore) {
     makeAutoObservable(this);
+    this.planStore = planStore;
   }
   getDevs() {
     return this.devs;
@@ -82,6 +85,11 @@ export class DevStore {
         if (currentTask || nextTask) {
           allTasksAreDone = false;
         }
+        if (this.planStore.isWeekend(now)) {
+          result[devIndex].push("WEEKEND");
+          return;
+        }
+
         if (dev.isOofDay(now)) {
           result[devIndex].push("OOF");
           return;

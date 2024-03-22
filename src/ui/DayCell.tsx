@@ -5,12 +5,14 @@ import { Task } from "../model/task";
 
 import "./DayCell.css";
 import { useStateStore } from "../context/StateStoreContext";
+import { usePlanStore } from "../context/PlanStoreContext";
 
 export const DayCell: FC<{
   dev: Dev;
   day: number;
   devDay: DevDay;
 }> = observer(({ dev, day, devDay }) => {
+  const planStore = usePlanStore();
   const stateStore = useStateStore();
   const isEditingOof = stateStore.isEditingOof;
   const cellClass = (() => {
@@ -26,6 +28,7 @@ export const DayCell: FC<{
         return "free";
     }
   })();
+  const maybeMondayClass = planStore.isMonday(day) ? " monday" : "";
   const maybeStyleAttributes: { style?: CSSProperties } = {};
   if (devDay instanceof Task) {
     maybeStyleAttributes["style"] = {
@@ -33,7 +36,7 @@ export const DayCell: FC<{
     };
   }
   return (
-    <td className={cellClass} {...maybeStyleAttributes}>
+    <td className={cellClass + maybeMondayClass} {...maybeStyleAttributes}>
       {isEditingOof ? (
         <OofEditor dev={dev} day={day} />
       ) : devDay instanceof Task ? (
