@@ -111,6 +111,29 @@ export class Task {
     this.store.deleteTask(this);
   }
 
+  get color() {
+    let hash = 0;
+    for (let i = 0; i < this.name.length; i++) {
+      hash = this.name.charCodeAt(i) + ((hash << 5) - hash);
+      hash = hash & hash;
+      hash = hash * 17;
+    }
+
+    hash = Math.abs(hash);
+
+    const transformedHash = Math.sin(hash) * 10000;
+    hash = Math.abs(Math.floor(transformedHash * transformedHash));
+
+    console.log(`${this.name} -> ${hash}`);
+
+    const hue = hash % 360;
+    const saturation = 50;
+    const lightness = 50;
+    const alpha = 0.2;
+
+    return `hsl(${hue}, ${saturation}%, ${lightness}%, ${alpha})`;
+  }
+
   get isAssigned() {
     return this.devStore.getDevs().some((dev) => dev.tasks.includes(this));
   }

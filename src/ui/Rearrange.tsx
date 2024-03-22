@@ -86,7 +86,9 @@ export const RearrangeableTaskItem: FC<{
             ...provided.draggableProps.style,
             width: `${myWidth}px`,
             border: "1px solid black",
+            backgroundColor: task.color,
           }}
+          title={task.name}
         >
           {task.name}
         </div>

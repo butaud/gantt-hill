@@ -35,6 +35,7 @@ export const TaskNode: FC<ITaskNodeProps> = observer(({ task }) => {
         border: "1px solid black",
         padding: "5px",
         margin: "5px",
+        backgroundColor: task.color,
       }}
     >
       <div

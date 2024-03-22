@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import { FC } from "react";
+import { CSSProperties, FC } from "react";
 import { Dev, DevDay } from "../model/dev";
 import { Task } from "../model/task";
 
@@ -26,8 +26,14 @@ export const DayCell: FC<{
         return "free";
     }
   })();
+  const maybeStyleAttributes: { style?: CSSProperties } = {};
+  if (devDay instanceof Task) {
+    maybeStyleAttributes["style"] = {
+      backgroundColor: devDay.color,
+    };
+  }
   return (
-    <td className={cellClass}>
+    <td className={cellClass} {...maybeStyleAttributes}>
       {isEditingOof ? (
         <OofEditor dev={dev} day={day} />
       ) : devDay instanceof Task ? (
