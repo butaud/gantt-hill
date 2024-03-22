@@ -9,12 +9,14 @@ td.rearrangeCell div {
 ul.dropZone {
   min-width: 150px;
   min-height: 200px;
-  border: 2px solid rgb(128, 164, 218);
   padding: 10px;
 }
 
-td.dropZone {
+td.dropZone,
+ul.dropZone {
   border: 2px solid rgb(128, 164, 218);
+  border-radius: 7px;
+  box-shadow: 0 0 5px rgba(128, 164, 218);
 }
 
 ul.dropZone div {
