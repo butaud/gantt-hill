@@ -74,12 +74,30 @@ export const AppControls: FC = () => {
     };
     setTimeout(doClear, 0);
   };
+
+  const copyMermaidCode = () => {
+    let mermaid = `gantt\n\ttitle ${planStore.title}\n\tdateFormat YYYY-MM-DD\n`;
+    if (planStore.excludeWeekends) {
+      mermaid += "\texcludes weekends\n";
+    }
+    mermaid += "\n";
+    devStore.getDevs().forEach((dev) => {
+      mermaid += `\tsection ${dev.name}\n`;
+      dev.tasks.forEach((task) => {
+        const startDate = planStore.startDate.plus({
+          days: dev.startDayForTask(task),
+        });
+        mermaid += `\t\t${task.name}: ${startDate.toISODate()}, ${task.estimate}d\n`;
+      });
+    });
+    navigator.clipboard.writeText(mermaid);
+  };
   return (
     <nav className="top-controls">
       <button onClick={save}>Save</button>
       <button onClick={load}>Load</button>
       <button onClick={clear}>Clear</button>
-      <button>Export as Mermaid</button>
+      <button onClick={copyMermaidCode}>Copy Mermaid Code</button>
     </nav>
   );
 };

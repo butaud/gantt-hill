@@ -236,4 +236,9 @@ export class Dev {
       tasks: this.tasks.map((task) => task.id),
     };
   }
+
+  startDayForTask(task: Task) {
+    const mySchedule = this.store.getScheduleForDev(this);
+    return mySchedule.indexOf(task);
+  }
 }
