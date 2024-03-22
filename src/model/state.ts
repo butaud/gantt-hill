@@ -23,4 +23,18 @@ export class StateStore {
   stopRearrangingTasks() {
     this.isRearrangingTasks = false;
   }
+
+  get serialized() {
+    return {};
+  }
+
+  clear() {
+    this.isEditingOof = false;
+    this.isRearrangingTasks = false;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  deserialize(_: unknown) {
+    // no-op
+  }
 }

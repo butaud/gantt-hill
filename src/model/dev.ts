@@ -1,5 +1,5 @@
 import { makeAutoObservable } from "mobx";
-import { Task } from "./task";
+import { Task, TaskStore } from "./task";
 import { PlanStore } from "./plan";
 
 const MAX_SCHEDULE_DAYS = 1000;
@@ -141,6 +141,34 @@ export class DevStore {
   getDev(id: number) {
     return this.devs.find((dev) => dev.id === id);
   }
+
+  get serialized() {
+    return {
+      devs: this.devs.map((dev) => dev.serialized),
+    };
+  }
+
+  clear() {
+    this.devs = [];
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  deserialize(data: any, taskStore: TaskStore) {
+    for (const devData of data.devs) {
+      const dev = new Dev(this, devData.id, devData.name);
+      this.devs.push(dev);
+      for (const taskId of devData.tasks) {
+        const task = taskStore.getTask(taskId);
+        if (!task) {
+          throw new Error(`Task ${taskId} not found`);
+        }
+        dev.addTask(task);
+      }
+      for (const day of devData.oofDays) {
+        dev.addOofDay(day);
+      }
+    }
+  }
 }
 
 export type DevDraft = {
@@ -198,5 +226,14 @@ export class Dev {
 
   get schedule() {
     return this.store.getScheduleForDev(this);
+  }
+
+  get serialized() {
+    return {
+      id: this.id,
+      name: this.name,
+      oofDays: Array.from(this.oofDays),
+      tasks: this.tasks.map((task) => task.id),
+    };
   }
 }

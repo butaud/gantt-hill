@@ -9,6 +9,7 @@ import { StateStore } from "./model/state";
 import { StateStoreProvider } from "./context/StateStoreContext";
 import { PlanStore } from "./model/plan";
 import { PlanStoreProvider } from "./context/PlanStoreContext";
+import { AppControls } from "./ui/AppControls";
 
 const stateStore = new StateStore();
 const planStore = new PlanStore();
@@ -35,11 +36,7 @@ function App() {
           <StateStoreProvider store={stateStore}>
             <header className="app-header">
               <h1>Gantt Hill</h1>
-              <nav className="top-controls">
-                <button>Save</button>
-                <button>Load</button>
-                <button>Export as Mermaid</button>
-              </nav>
+              <AppControls />
             </header>
             <main className="main-content">
               <PlanEditor />

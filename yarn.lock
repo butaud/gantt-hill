@@ -614,6 +614,11 @@
   resolved "https://domoreexp.pkgs.visualstudio.com/_packaging/npm-mirror/npm/registry/@types/use-sync-external-store/-/use-sync-external-store-0.0.3.tgz#b6725d5f4af24ace33b36fafd295136e75509f43"
   integrity sha1-tnJdX0rySs4zs2+v0pUTbnVQn0M=
 
+"@types/wicg-file-system-access@^2023.10.5":
+  version "2023.10.5"
+  resolved "https://domoreexp.pkgs.visualstudio.com/_packaging/npm-mirror/npm/registry/@types/wicg-file-system-access/-/wicg-file-system-access-2023.10.5.tgz#14b3c25eb4d914b5734795bdea71da229f918b9d"
+  integrity sha1-FLPCXrTZFLVzR5W96nHaIp+Ri50=
+
 "@typescript-eslint/eslint-plugin@^7.0.2":
   version "7.1.1"
   resolved "https://domoreexp.pkgs.visualstudio.com/_packaging/npm-mirror/npm/registry/@typescript-eslint/eslint-plugin/-/eslint-plugin-7.1.1.tgz"

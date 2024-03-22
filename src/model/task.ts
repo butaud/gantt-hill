@@ -30,6 +30,40 @@ export class TaskStore {
   getTask(id: number) {
     return this.tasks.find((task) => task.id === id);
   }
+
+  get serialized() {
+    return {
+      tasks: this.tasks.map((task) => task.serialized),
+    };
+  }
+
+  clear() {
+    this.tasks = [];
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  deserialize(data: any) {
+    for (const taskData of data.tasks) {
+      const task = new Task(
+        this,
+        this.devStore,
+        taskData.id,
+        taskData.name,
+        taskData.estimate,
+      );
+      this.tasks.push(task);
+    }
+
+    for (const taskData of data.tasks) {
+      const task = this.getTask(taskData.id);
+      if (!task) {
+        throw new Error(`Task ${taskData.id} not found`);
+      }
+      task.setDependencies(
+        taskData.dependsOn.map((id: number) => this.getTask(id)),
+      );
+    }
+  }
 }
 
 export type TaskDraft = {
@@ -134,6 +168,15 @@ export class Task {
 
   get isAssigned() {
     return this.devStore.getDevs().some((dev) => dev.tasks.includes(this));
+  }
+
+  get serialized() {
+    return {
+      id: this.id,
+      name: this.name,
+      estimate: this.estimate,
+      dependsOn: this.dependsOn.map((task) => task.id),
+    };
   }
 }
 
