@@ -25,6 +25,17 @@ export class TaskStore {
     this.tasks.splice(toIndex, 0, task);
   }
   deleteTask(task: Task) {
+    // first remove the task from any dependencies
+    for (const otherTask of this.tasks) {
+      otherTask.removeDependency(task);
+    }
+
+    // then, remove the task from any devs
+    for (const dev of this.devStore.getDevs()) {
+      dev.removeTask(task);
+    }
+
+    // finally, remove the task from the task store
     this.tasks = this.tasks.filter((t) => t !== task);
   }
   getTask(id: number) {

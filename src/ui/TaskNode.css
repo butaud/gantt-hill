@@ -3,6 +3,7 @@
   border: 1px solid black;
   padding: 5px;
   margin: 5px;
+  position: relative;
 }
 
 .task-node .controls {
@@ -19,4 +20,10 @@
 ul.dependencies {
   list-style-type: none;
   padding: 0;
+}
+
+.deleteButtonContainer {
+  position: absolute;
+  bottom: 0;
+  right: 0;
 }

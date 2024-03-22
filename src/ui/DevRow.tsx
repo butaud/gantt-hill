@@ -8,6 +8,7 @@ import { TaskRearrangeDevRow } from "./Rearrange";
 
 import "./DevRow.css";
 import { usePlanStore } from "../context/PlanStoreContext";
+import { DeleteButton } from "./DeleteButton";
 
 export const DevRow: FC<{
   dev: Dev;
@@ -23,6 +24,7 @@ export const DevRow: FC<{
     return (
       <tr>
         <td className="devName">
+          <DeleteButton onClick={() => dev.delete()} />
           <EditableValue value={dev.name} onChange={setDevName} />
         </td>
         {dev.schedule.map((devDay, index) => {

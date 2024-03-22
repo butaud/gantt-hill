@@ -5,6 +5,7 @@ import { observer } from "mobx-react-lite";
 import { EditableValue, ICustomEditorProps } from "./EditableValue";
 
 import "./TaskNode.css";
+import { DeleteButton } from "./DeleteButton";
 
 export type ITaskNodeProps = {
   task: Task;
@@ -37,6 +38,9 @@ export const TaskNode: FC<ITaskNodeProps> = observer(({ task }) => {
         backgroundColor: task.color,
       }}
     >
+      <div className="deleteButtonContainer">
+        <DeleteButton onClick={() => task.delete()} />
+      </div>
       <div
         style={{
           display: "flex",

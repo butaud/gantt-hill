@@ -1,0 +1,14 @@
+a.delete {
+  color: red;
+  cursor: pointer;
+  font-size: 0.8em;
+  margin-right: 10px;
+  text-decoration: none;
+  line-height: 0.8em;
+  height: 0.8em;
+}
+
+a.delete:hover {
+  color: darkred;
+  text-decoration: underline;
+}
