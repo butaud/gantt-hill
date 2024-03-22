@@ -1,0 +1,11 @@
+.task-section {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+@media (max-width: 800px) {
+  .task-section {
+    flex-direction: column;
+  }
+}

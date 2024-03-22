@@ -5,6 +5,8 @@ import { NewTaskNode, TaskNode } from "./TaskNode";
 import { useStateStore } from "../context/StateStoreContext";
 import { TaskRearrangeUnassignedTasks } from "./Rearrange";
 
+import "./TaskSection.css";
+
 export const TaskSection: FC = observer(() => {
   const [isAdding, setIsAdding] = useState(false);
   const taskStore = useTaskStore();
@@ -15,13 +17,7 @@ export const TaskSection: FC = observer(() => {
   const unassignedTasks = tasks.filter((task) => !task.isAssigned);
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "space-between",
-      }}
-    >
+    <div className="task-section">
       <div>
         <h3>Unassigned Tasks</h3>
         {stateStore.isRearrangingTasks ? (
