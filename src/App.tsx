@@ -43,6 +43,11 @@ function App() {
             <main className="main-content">
               <PlanEditor />
             </main>
+            <footer className="app-footer">
+              <a href="https://github.com/butaud/gantt-hill">
+                GitHub Source with Readme
+              </a>
+            </footer>
           </StateStoreProvider>
         </TaskStoreProvider>
       </DevStoreProvider>

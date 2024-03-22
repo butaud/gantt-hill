@@ -4,6 +4,7 @@
   align-items: center;
   padding: 20px;
   border-bottom: 1px solid #e0e0e0;
+  height: 10vh;
 }
 
 .top-controls button {
@@ -19,8 +20,18 @@
   margin-right: 100px;
   width: auto;
   max-width: 100%;
+  min-height: 80vh;
 }
 
 .main-content section {
   width: 100%;
+}
+
+.app-footer {
+  height: 10vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  border-top: 1px solid #e0e0e0;
 }
