@@ -131,7 +131,7 @@ export const NewTaskNode: FC<{
   stopEditing: () => void;
 }> = observer(({ stopEditing }) => {
   const [name, setName] = useState("New Task");
-  const [estimate, setEstimate] = useState(0);
+  const [estimate, setEstimate] = useState(1);
   const taskStore = useTaskStore();
 
   const saveTask = () => {
@@ -149,6 +149,7 @@ export const NewTaskNode: FC<{
       <input
         type="number"
         value={estimate}
+        min={1}
         onChange={(e) => setEstimate(parseInt(e.target.value))}
       />
       <div

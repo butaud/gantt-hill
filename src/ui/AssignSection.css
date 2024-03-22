@@ -1,0 +1,42 @@
+.assignment-rows {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.assignment-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+  width: 100%;
+  overflow-y: auto;
+}
+
+.assignment-row ul {
+  min-height: 30px;
+  list-style-type: none;
+  padding: 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.assignment-row ul li {
+  margin: 5px 10px;
+}
+
+.assignment-row .dropZone {
+  margin-left: 10px;
+  flex-grow: 1;
+  border: 2px solid black;
+  border-radius: 7px;
+}
+
+.assignment-row .dropZone.dragging {
+  box-shadow: 0 0 5px rgba(128, 164, 218);
+  border-color: rgb(128, 164, 218);
+}

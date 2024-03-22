@@ -1,13 +1,20 @@
 .task-section {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-evenly;
+  align-items: center;
 }
 
 .task-container {
-  max-height: 400px;
-  overflow-y: auto;
-  overflow-x: hidden;
+  max-width: 630px;
+  max-height: 30vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  flex-wrap: wrap;
+  overflow-y: hidden;
+  overflow-x: auto;
 }
 
 @media (max-width: 800px) {

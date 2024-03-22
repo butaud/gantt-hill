@@ -42,6 +42,12 @@ export class TaskStore {
     return this.tasks.find((task) => task.id === id);
   }
 
+  get unassignedTotal() {
+    return this.tasks
+      .filter((task) => !task.isAssigned)
+      .reduce((acc, task) => acc + task.estimate, 0);
+  }
+
   get serialized() {
     return {
       tasks: this.tasks.map((task) => task.serialized),
