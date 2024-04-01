@@ -1,7 +1,7 @@
 import { observer } from "mobx-react-lite";
 import { FC } from "react";
-import { usePlanStore } from "../context/PlanStoreContext";
-import { EditableValue } from "./EditableValue";
+import { usePlanStore } from "../../context/PlanStoreContext";
+import { EditableValue } from "../shared/EditableValue";
 
 export const MetadataSection: FC = observer(() => {
   const planStore = usePlanStore();

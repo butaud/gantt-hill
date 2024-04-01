@@ -1,7 +1,7 @@
 import { observer } from "mobx-react-lite";
 import { FC, useState } from "react";
-import { useTaskStore } from "../context/TaskStoreContext";
-import { NewTaskNode, TaskNode } from "./TaskNode";
+import { useTaskStore } from "../../context/TaskStoreContext";
+import { NewTaskNode, TaskNode } from "../define/TaskNode";
 
 import "./TaskSection.css";
 

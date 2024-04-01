@@ -1,12 +1,12 @@
 import { DateTime } from "luxon";
 import { observer } from "mobx-react-lite";
 import { FC } from "react";
-import { useDevStore } from "../context/DevStoreContext";
-import { DevRow } from "./DevRow";
-import { useStateStore } from "../context/StateStoreContext";
+import { useDevStore } from "../../context/DevStoreContext";
+import { DevRow } from "../schedule/DevRow";
+import { useStateStore } from "../../context/StateStoreContext";
 
 import "./ScheduleSection.css";
-import { usePlanStore } from "../context/PlanStoreContext";
+import { usePlanStore } from "../../context/PlanStoreContext";
 
 export const ScheduleSection: FC = observer(() => {
   const planStore = usePlanStore();

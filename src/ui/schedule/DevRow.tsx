@@ -1,10 +1,10 @@
 import { observer } from "mobx-react-lite";
 import { FC } from "react";
-import { Dev } from "../model/dev";
+import { Dev } from "../../model/dev";
 import { DayCell } from "./DayCell";
 
 import "./DevRow.css";
-import { usePlanStore } from "../context/PlanStoreContext";
+import { usePlanStore } from "../../context/PlanStoreContext";
 
 export const DevRow: FC<{
   dev: Dev;

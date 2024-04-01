@@ -1,11 +1,11 @@
 import { FC, useState } from "react";
-import { DependencyCycleError, Task } from "../model/task";
-import { useTaskStore } from "../context/TaskStoreContext";
+import { DependencyCycleError, Task } from "../../model/task";
+import { useTaskStore } from "../../context/TaskStoreContext";
 import { observer } from "mobx-react-lite";
-import { EditableValue, ICustomEditorProps } from "./EditableValue";
+import { EditableValue, ICustomEditorProps } from "../shared/EditableValue";
 
 import "./TaskNode.css";
-import { DeleteButton } from "./DeleteButton";
+import { DeleteButton } from "../shared/DeleteButton";
 
 export type ITaskNodeProps = {
   task: Task;

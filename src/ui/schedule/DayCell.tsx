@@ -1,11 +1,11 @@
 import { observer } from "mobx-react-lite";
 import { CSSProperties, FC } from "react";
-import { Dev, DevDay } from "../model/dev";
-import { Task } from "../model/task";
+import { Dev, DevDay } from "../../model/dev";
+import { Task } from "../../model/task";
 
 import "./DayCell.css";
-import { useStateStore } from "../context/StateStoreContext";
-import { usePlanStore } from "../context/PlanStoreContext";
+import { useStateStore } from "../../context/StateStoreContext";
+import { usePlanStore } from "../../context/PlanStoreContext";
 
 export const DayCell: FC<{
   dev: Dev;

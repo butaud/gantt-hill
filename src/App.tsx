@@ -1,5 +1,5 @@
 import "./App.css";
-import { PlanEditor } from "./ui/PlanEditor";
+import { PlanEditor } from "./ui/structure/PlanEditor";
 
 import { TaskStore } from "./model/task";
 import { DevStore } from "./model/dev";

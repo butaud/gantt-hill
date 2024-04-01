@@ -1,8 +1,8 @@
 import { FC, useMemo, useRef, useState } from "react";
-import { useTaskStore } from "../context/TaskStoreContext";
-import { useDevStore } from "../context/DevStoreContext";
+import { useTaskStore } from "../../context/TaskStoreContext";
+import { useDevStore } from "../../context/DevStoreContext";
 import { observer } from "mobx-react-lite";
-import { Task } from "../model/task";
+import { Task } from "../../model/task";
 import {
   DragDropContext,
   Draggable,
@@ -11,9 +11,9 @@ import {
 } from "@hello-pangea/dnd";
 
 import "./AssignSection.css";
-import { useDimensions } from "../hooks/dimensions";
-import { EditableValue } from "./EditableValue";
-import { DeleteButton } from "./DeleteButton";
+import { useDimensions } from "../../hooks/dimensions";
+import { EditableValue } from "../shared/EditableValue";
+import { DeleteButton } from "../shared/DeleteButton";
 
 export const AssignSection: FC = observer(() => {
   const taskStore = useTaskStore();
