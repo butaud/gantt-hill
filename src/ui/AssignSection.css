@@ -36,6 +36,14 @@
   border-radius: 7px;
 }
 
+.assignment-row.unassigned .dropZone {
+  border-color: rgb(144, 159, 180);
+}
+
+.assignment-row.unassigned h3 {
+  color: rgb(144, 159, 180);
+}
+
 .assignment-row .dropZone.dragging {
   box-shadow: 0 0 5px rgba(128, 164, 218);
   border-color: rgb(128, 164, 218);

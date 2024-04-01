@@ -176,9 +176,9 @@ export class Task {
     hash = Math.abs(Math.floor(transformedHash * transformedHash));
 
     const hue = hash % 360;
-    const saturation = 50;
+    const saturation = 90;
     const lightness = 50;
-    const alpha = 0.2;
+    const alpha = 0.15;
 
     return `hsl(${hue}, ${saturation}%, ${lightness}%, ${alpha})`;
   }

@@ -65,7 +65,7 @@ export const AssignSection: FC = observer(() => {
       <h2>Assign</h2>
       <div className="assignment-rows" ref={divRef}>
         <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
-          <div className="assignment-row">
+          <div className="assignment-row unassigned">
             <h3>Unassigned</h3>
             <TaskRearrangeRow
               tasks={unassignedTasks}
@@ -96,8 +96,15 @@ export const TaskRearrangeRow: FC<{
   rowWidth: number;
   dragging: boolean;
 }> = observer(({ tasks, devId, rowWidth, dragging }) => {
+  const classNames = ["dropZone"];
+  if (dragging) {
+    classNames.push("dragging");
+  }
+  if (!devId) {
+    classNames.push("unassigned");
+  }
   return (
-    <div className={"dropZone" + (dragging ? " dragging" : "")}>
+    <div className={classNames.join(" ")}>
       <Droppable
         droppableId={devId?.toString() ?? "unassigned"}
         direction="horizontal"
