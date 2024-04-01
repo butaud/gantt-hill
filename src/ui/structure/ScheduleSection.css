@@ -11,6 +11,6 @@ table.schedule td {
   padding: 5px;
 }
 
-table.schedule tr {
+.schedule-container {
   overflow-x: auto;
 }

@@ -13,7 +13,6 @@
   justify-content: center;
   margin-top: 10px;
   width: 100%;
-  overflow-y: auto;
 }
 
 .add-row {
@@ -40,6 +39,10 @@
 
 .assignment-row ul li {
   margin: 5px 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 30px;
 }
 
 .assignment-row .dropZone {

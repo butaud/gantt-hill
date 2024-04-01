@@ -39,29 +39,31 @@ export const ScheduleSection: FC = observer(() => {
             .join(", ")}
         </p>
       )}
-      <table className="schedule">
-        <thead>
-          <tr>
-            <th>Dev</th>
-            {[...Array(end).keys()].map((day) => {
-              if (planStore.isWeekend(day)) {
-                return null;
-              }
-              return (
-                <DayHeader
-                  key={day}
-                  day={planStore.startDate.plus({ days: day })}
-                />
-              );
-            })}
-          </tr>
-        </thead>
-        <tbody>
-          {devs.map((dev) => (
-            <DevRow key={dev.id} dev={dev} />
-          ))}
-        </tbody>
-      </table>
+      <div className="schedule-container">
+        <table className="schedule">
+          <thead>
+            <tr>
+              <th>Dev</th>
+              {[...Array(end).keys()].map((day) => {
+                if (planStore.isWeekend(day)) {
+                  return null;
+                }
+                return (
+                  <DayHeader
+                    key={day}
+                    day={planStore.startDate.plus({ days: day })}
+                  />
+                );
+              })}
+            </tr>
+          </thead>
+          <tbody>
+            {devs.map((dev) => (
+              <DevRow key={dev.id} dev={dev} />
+            ))}
+          </tbody>
+        </table>
+      </div>
     </section>
   );
 });

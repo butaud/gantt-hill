@@ -203,6 +203,7 @@ const AddDevRow: FC = observer(() => {
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
+            autoFocus
           />
           <button onClick={addDev}>Save</button>
           <button onClick={cancel}>Cancel</button>
