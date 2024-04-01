@@ -16,6 +16,19 @@
   overflow-y: auto;
 }
 
+.add-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: start;
+  margin-top: 10px;
+  width: 100%;
+}
+
+.add-row button {
+  margin-left: 10px;
+}
+
 .assignment-row ul {
   min-height: 30px;
   list-style-type: none;

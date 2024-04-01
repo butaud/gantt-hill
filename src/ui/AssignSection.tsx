@@ -12,6 +12,8 @@ import {
 
 import "./AssignSection.css";
 import { useDimensions } from "../hooks/dimensions";
+import { EditableValue } from "./EditableValue";
+import { DeleteButton } from "./DeleteButton";
 
 export const AssignSection: FC = observer(() => {
   const taskStore = useTaskStore();
@@ -75,7 +77,13 @@ export const AssignSection: FC = observer(() => {
           </div>
           {devStore.getDevs().map((dev) => (
             <div key={dev.id} className="assignment-row">
-              <h3>{dev.name}</h3>
+              <h3>
+                <DeleteButton onClick={() => dev.delete()} />
+                <EditableValue
+                  value={dev.name}
+                  onChange={(newName: string) => dev.setName(newName)}
+                />
+              </h3>
               <TaskRearrangeRow
                 tasks={dev.tasks}
                 devId={dev.id}
@@ -85,6 +93,7 @@ export const AssignSection: FC = observer(() => {
             </div>
           ))}
         </DragDropContext>
+        <AddDevRow />
       </div>
     </>
   );
@@ -166,5 +175,39 @@ const RearrangeableTaskItem: FC<{
         </li>
       )}
     </Draggable>
+  );
+});
+
+const AddDevRow: FC = observer(() => {
+  const devStore = useDevStore();
+  const [name, setName] = useState("");
+  const [adding, setAdding] = useState(false);
+
+  const addDev = () => {
+    devStore.addDev({ name });
+    setName("");
+    setAdding(false);
+  };
+
+  const cancel = () => {
+    setName("");
+    setAdding(false);
+  };
+
+  return (
+    <div className="add-row">
+      {!adding && <button onClick={() => setAdding(true)}>Add Dev</button>}
+      {adding && (
+        <>
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <button onClick={addDev}>Save</button>
+          <button onClick={cancel}>Cancel</button>
+        </>
+      )}
+    </div>
   );
 });

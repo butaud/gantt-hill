@@ -2,25 +2,17 @@ import { observer } from "mobx-react-lite";
 import { FC } from "react";
 import { Dev } from "../model/dev";
 import { DayCell } from "./DayCell";
-import { EditableValue } from "./EditableValue";
 
 import "./DevRow.css";
 import { usePlanStore } from "../context/PlanStoreContext";
-import { DeleteButton } from "./DeleteButton";
 
 export const DevRow: FC<{
   dev: Dev;
 }> = observer(({ dev }) => {
-  const setDevName = (newName: string) => {
-    dev.name = newName;
-  };
   const planStore = usePlanStore();
   return (
     <tr>
-      <td className="devName">
-        <DeleteButton onClick={() => dev.delete()} />
-        <EditableValue value={dev.name} onChange={setDevName} />
-      </td>
+      <td className="devName">{dev.name}</td>
       {dev.schedule.map((devDay, index) => {
         if (planStore.isWeekend(index)) {
           return null;

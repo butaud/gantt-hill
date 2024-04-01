@@ -1,6 +1,6 @@
 import { DateTime } from "luxon";
 import { observer } from "mobx-react-lite";
-import { FC, useState } from "react";
+import { FC } from "react";
 import { useDevStore } from "../context/DevStoreContext";
 import { DevRow } from "./DevRow";
 import { useStateStore } from "../context/StateStoreContext";
@@ -60,7 +60,6 @@ export const ScheduleSection: FC = observer(() => {
           {devs.map((dev) => (
             <DevRow key={dev.id} dev={dev} />
           ))}
-          <AddDevRow />
         </tbody>
       </table>
     </div>
@@ -70,41 +69,3 @@ export const ScheduleSection: FC = observer(() => {
 const DayHeader: FC<{ day: DateTime }> = ({ day }) => {
   return <th>{day.toFormat("EEE d")}</th>;
 };
-
-const AddDevRow: FC = observer(() => {
-  const devStore = useDevStore();
-  const [name, setName] = useState("");
-  const [adding, setAdding] = useState(false);
-
-  const addDev = () => {
-    devStore.addDev({ name });
-    setName("");
-    setAdding(false);
-  };
-
-  const cancel = () => {
-    setName("");
-    setAdding(false);
-  };
-
-  return (
-    <tr>
-      {!adding && (
-        <td>
-          <button onClick={() => setAdding(true)}>Add Dev</button>
-        </td>
-      )}
-      {adding && (
-        <td>
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-          <button onClick={addDev}>Save</button>
-          <button onClick={cancel}>Cancel</button>
-        </td>
-      )}
-    </tr>
-  );
-});
