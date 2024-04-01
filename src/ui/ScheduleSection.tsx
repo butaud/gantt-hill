@@ -18,7 +18,7 @@ export const ScheduleSection: FC = observer(() => {
     devStore.tasksWithUnassignedDependencies;
 
   return (
-    <div>
+    <section className="schedule">
       <h2>Schedule</h2>
       <div style={{ display: "flex", justifyContent: "space-evenly" }}>
         {stateStore.isEditingOof ? (
@@ -62,7 +62,7 @@ export const ScheduleSection: FC = observer(() => {
           ))}
         </tbody>
       </table>
-    </div>
+    </section>
   );
 });
 

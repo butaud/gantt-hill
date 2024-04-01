@@ -11,8 +11,8 @@ export const TaskSection: FC = observer(() => {
   const tasks = taskStore.getTasks();
 
   return (
-    <div className="task-section">
-      <h3>Tasks</h3>
+    <section className="tasks">
+      <h2>Define</h2>
       <div className="task-container">
         {tasks.map((task) => (
           <TaskNode key={task.id} task={task} />
@@ -23,6 +23,6 @@ export const TaskSection: FC = observer(() => {
           <button onClick={() => setIsAdding(true)}>Add Task</button>
         )}
       </div>
-    </div>
+    </section>
   );
 });

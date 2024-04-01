@@ -1,4 +1,4 @@
-.task-section {
+section.tasks {
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -15,10 +15,4 @@
   flex-wrap: wrap;
   overflow-y: hidden;
   overflow-x: auto;
-}
-
-@media (max-width: 800px) {
-  .task-section {
-    flex-direction: column;
-  }
 }

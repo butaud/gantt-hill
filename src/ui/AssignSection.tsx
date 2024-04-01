@@ -63,7 +63,7 @@ export const AssignSection: FC = observer(() => {
     setIsDragging(true);
   };
   return (
-    <>
+    <section className="assign">
       <h2>Assign</h2>
       <div className="assignment-rows" ref={divRef}>
         <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
@@ -95,7 +95,7 @@ export const AssignSection: FC = observer(() => {
         </DragDropContext>
         <AddDevRow />
       </div>
-    </>
+    </section>
   );
 });
 
